@@ -47,24 +47,22 @@
 
         /* --- HEADER --- */
         .top-bar {
-            padding: 10px 15px;
+            padding: 8px 15px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: var(--control-bg);
             border-bottom: 1px solid var(--border); 
             z-index: 100;
-            height: 60px;
+            min-height: 60px; /* Allow height to grow if needed */
         }
 
         .header-center {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            /* Allow shrinking on mobile so it doesn't push buttons off screen */
+            gap: 12px;
             flex: 1; 
-            overflow: hidden; 
         }
 
         /* LOGO STYLING */
@@ -72,8 +70,6 @@
             height: 38px; 
             width: auto;
             object-fit: contain;
-            /* Prevent logo from being too huge on mobile */
-            max-width: 140px; 
         }
 
         .app-title {
@@ -82,24 +78,29 @@
             color: var(--text-main);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding-left: 10px;
+            padding-left: 12px;
             border-left: 2px solid #ddd;
             line-height: 1;
-            white-space: nowrap; /* Keep text on one line */
         }
 
-        /* MOBILE FIXES */
+        /* MOBILE FIXES - STACK LOGO AND TEXT */
         @media (max-width: 480px) {
-            .app-logo {
-                height: 28px; /* Smaller logo on phone */
-                max-width: 110px;
-            }
-            .app-title {
-                font-size: 12px; /* Smaller text on phone */
-                padding-left: 8px;
-            }
             .header-center {
-                gap: 6px;
+                flex-direction: column; /* Stack vertically */
+                gap: 4px; /* Space between logo and text */
+            }
+
+            .app-logo {
+                height: 36px; /* Keep logo large */
+                max-width: 160px;
+            }
+
+            .app-title {
+                font-size: 11px; /* Smaller text */
+                padding-left: 0;
+                border-left: none; /* Remove vertical divider */
+                color: var(--text-sec); /* Slightly lighter text color */
+                font-weight: 800;
             }
         }
 
@@ -112,7 +113,7 @@
             color: var(--text-main);
             display: flex;
             align-items: center;
-            min-width: 40px; /* Ensure button area is tappable */
+            min-width: 40px; 
         }
 
         /* --- SIDEBAR MENU --- */
@@ -183,9 +184,10 @@
             letter-spacing: -2px;
         }
 
-        /* Responsive Timer Text */
+        /* Responsive Timer */
         @media (max-width: 400px) {
-            .live-timer { font-size: 48px; }
+            .live-timer { font-size: 48px; margin-bottom: 20px; }
+            .punch-section { padding: 30px 20px; }
         }
 
         /* RECTANGLE BUTTON */
@@ -468,7 +470,7 @@
 
         // --- STORAGE ---
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_v12');
+            const saved = localStorage.getItem('hoursTrackerState_v13');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -482,7 +484,7 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_v12', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_v13', JSON.stringify(state));
             renderUI();
         }
 
@@ -738,7 +740,7 @@
             document.getElementById('overlay').classList.remove('active');
         }
         function clearData() {
-            if(confirm("Reset all data?")) { localStorage.removeItem('hoursTrackerState_v12'); location.reload(); }
+            if(confirm("Reset all data?")) { localStorage.removeItem('hoursTrackerState_v13'); location.reload(); }
         }
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
