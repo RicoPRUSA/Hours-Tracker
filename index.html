@@ -85,6 +85,24 @@
             line-height: 1;
         }
 
+        @media (max-width: 480px) {
+            .header-center {
+                flex-direction: column; 
+                gap: 4px; 
+            }
+            .app-logo {
+                height: 36px; 
+                max-width: 160px;
+            }
+            .app-title {
+                font-size: 11px; 
+                padding-left: 0;
+                border-left: none; 
+                color: var(--text-sec); 
+                font-weight: 800;
+            }
+        }
+
         .menu-btn {
             font-size: 24px;
             background: none;
@@ -292,6 +310,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative; /* For absolute edit button */
         }
         .day-row:last-child { border-bottom: none; }
 
@@ -339,14 +358,14 @@
 
             /* 2. Compact Control Panel */
             .punch-section {
-                padding: 15px 15px 20px 15px; /* Tighter padding */
+                padding: 15px 15px 20px 15px; 
             }
             .live-timer {
-                font-size: 42px; /* Smaller Timer */
+                font-size: 42px; 
                 margin-bottom: 12px;
             }
             .punch-btn {
-                height: 60px; /* Shorter Button */
+                height: 60px; 
                 gap: 10px;
             }
             .btn-main-text { font-size: 20px; }
@@ -355,7 +374,7 @@
 
             /* 3. Wider Cards */
             .scroll-container {
-                padding: 15px 8px; /* Very narrow side padding for max width */
+                padding: 15px 8px; /* Very narrow side padding */
             }
             .main-card {
                 border-radius: 8px;
@@ -376,7 +395,7 @@
             .header-title { font-size: 16px; }
             .header-right {
                 width: 100%;
-                justify-content: space-between; /* Spread content */
+                justify-content: space-between; 
             }
             .stats-group {
                 flex-direction: row;
@@ -385,44 +404,56 @@
             }
             .total-pay-badge { margin-bottom: 0; font-size: 16px; }
 
-            /* 5. List Items Stacking (Day on top, Salary on bottom) */
+            /* 5. CENTERED List Items + Inline Edit Button */
             .day-row {
                 flex-direction: column;
-                align-items: flex-start;
-                position: relative;
-                padding: 12px 15px;
+                align-items: center; /* Center Items */
+                padding: 12px 15px 15px 15px;
             }
 
             .day-info {
                 width: 100%;
-                margin-bottom: 6px;
+                margin-bottom: 8px;
                 display: flex;
-                align-items: center;
-                gap: 8px;
-                flex-wrap: wrap; /* Allows date/time to sit nicely */
+                flex-direction: column;
+                align-items: center; /* Center Content */
+                justify-content: center;
+                text-align: center;
             }
             
-            .day-name { margin-bottom: 0; font-size: 15px; }
-            .day-time-range { font-size: 13px; }
+            .day-name { margin-bottom: 2px; font-size: 16px; }
+            .day-time-range { font-size: 14px; color: #7F8C8D; }
 
             .day-stats {
                 width: 100%;
-                flex-direction: row; /* Inline */
-                justify-content: flex-start; /* Left aligned */
-                gap: 15px; /* Space between money and hours */
+                flex-direction: row; /* Inline Salary & Hours */
+                justify-content: center; /* Center the stats row */
                 align-items: center;
+                gap: 15px;
+                padding-left: 30px; /* Balance spacing against right button */
+                padding-right: 30px; 
             }
 
-            .day-earn { font-size: 16px; font-weight: 800; }
-            .day-dur { margin-top: 0; background: transparent; padding: 0; color: #7F8C8D; font-size: 13px;}
+            .day-earn { font-size: 17px; font-weight: 800; color: var(--success); }
+            .day-dur { 
+                margin-top: 0; 
+                background: transparent; 
+                padding: 0; 
+                color: var(--text-main); 
+                font-size: 14px; 
+                font-family: monospace; 
+                font-weight: 600;
+            }
 
-            /* Edit button absolute position to not interfere with stacking */
+            /* Edit Button: Absolute Bottom Right */
             .edit-btn {
                 position: absolute;
-                top: 50%;
-                right: 10px;
-                transform: translateY(-50%);
-                border: none; /* Cleaner look on mobile */
+                top: auto;
+                bottom: 12px;
+                right: 15px;
+                transform: none;
+                width: 32px; height: 32px;
+                border: 1px solid #eee;
             }
         }
 
@@ -599,7 +630,7 @@
 
         // --- STORAGE ---
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_v16');
+            const saved = localStorage.getItem('hoursTrackerState_v17');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -613,7 +644,7 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_v16', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_v17', JSON.stringify(state));
             renderUI();
         }
 
@@ -887,7 +918,7 @@
             document.getElementById('overlay').classList.remove('active');
         }
         function clearData() {
-            if(confirm("Reset all data?")) { localStorage.removeItem('hoursTrackerState_v16'); location.reload(); }
+            if(confirm("Reset all data?")) { localStorage.removeItem('hoursTrackerState_v17'); location.reload(); }
         }
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
