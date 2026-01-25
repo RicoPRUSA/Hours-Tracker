@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hours Tracker</title>
+    <style>
+        :root {
+            /* SUBFLOOR PALETTE (Warmer) */
+            --bg-color: #F5F0EB;       /* Warm Beige (Subfloor/Plywood tone) */
+            --card-bg: #FFFFFF;        /* Pure White (Cards) */
+            --control-bg: #FFFFFF;     /* Pure White (Punch Section) */
+            
+            --text-main: #2C3E50;      /* Dark Navy Slate */
+            --text-sec: #7F8C8D;       /* Cool Grey */
+            --border: #E2DED9;         /* Warm Grey Border */
+            
+            /* Accents based on your Logo */
+            --accent-orange: #E67E22;  
+            --accent-blue: #007696;    /* Teal from logo icon */
+            --accent-red: #D32F2F;     /* Red from logo text */
+            
+            --success: #27AE60;        /* Emerald Green */
+            --danger: #C0392B;         /* Brick Red */
+            
+            /* Gradients */
+            --btn-in-gradient: linear-gradient(135deg, #007696 0%, #005a75 100%); /* Teal branding */
+            --btn-out-gradient: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%); /* Red branding */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- HEADER --- */
+        .top-bar {
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--control-bg);
+            border-bottom: 1px solid var(--border); 
+            z-index: 100;
+            height: 50px; /* Fixed height for consistency */
+        }
+
+        /* LOGO CONTAINER */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        
+        .app-logo {
+            max-height: 40px; /* Constraints logo height */
+            width: auto;
+            object-fit: contain;
+        }
+
+        .menu-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            color: var(--text-main);
+        }
+
+        /* --- SIDEBAR MENU --- */
+        .sidebar {
+            position: fixed;
+            top: 0; left: -280px;
+            width: 260px; height: 100%;
+            background: #FFFFFF;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            padding-top: 20px;
+        }
+        .sidebar.open { left: 0; }
+
+        .sidebar-header {
+            padding: 20px 25px;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-item {
+            padding: 16px 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.1s;
+        }
+        .sidebar-item:active { background-color: #f0f0f0; }
+        
+        .overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(44, 62, 80, 0.4);
+            backdrop-filter: blur(2px);
+            display: none; z-index: 900;
+        }
+        .overlay.active { display: block; }
+
+        /* --- PUNCH SECTION (CONTROL PANEL) --- */
+        .punch-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background: var(--control-bg);
+            box-shadow: 0 4px 20px rgba(139, 119, 101, 0.1);
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            z-index: 10; 
+        }
+
+        .live-timer {
+            font-size: 60px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 30px;
+            color: var(--text-main);
+            font-family: monospace;
+            letter-spacing: -2px;
+        }
+
+        /* RECTANGLE BUTTON */
+        .punch-btn {
+            width: 100%;
+            max-width: 320px;
+            height: 80px;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.1s;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .punch-btn:active { transform: scale(0.98); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .btn-in { background: var(--btn-in-gradient); }
+        .btn-out { background: var(--btn-out-gradient); }
+
+        .btn-label-group { display: flex; flex-direction: column; align-items: flex-start; }
+        .btn-main-text { font-size: 24px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; }
+        .btn-sub-text { font-size: 13px; opacity: 0.9; font-weight: 600; text-transform: uppercase; }
+        .btn-icon { font-size: 28px; }
+
+        /* --- CARDS CONTAINER --- */
+        .scroll-container {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .main-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(139, 119, 101, 0.08); /* Warm shadow */
+            overflow: hidden;
+            border: 1px solid #fff; 
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            background: #FAFAFA;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid var(--accent-blue); /* Match logo blue */
+        }
+
+        .header-left { display: flex; flex-direction: column; }
+        .header-label { font-size: 11px; color: var(--text-sec); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .header-title { font-size: 15px; font-weight: 800; color: var(--text-main); }
+
+        .header-right { text-align: right; }
+        .total-pay-badge {
+            background: var(--text-main);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+        .total-hrs-sub { font-size: 13px; color: var(--text-sec); font-weight: 600; }
+
+        /* LIST */
+        .day-list { list-style: none; padding: 0; margin: 0; }
+
+        .day-row {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .day-row:last-child { border-bottom: none; }
+
+        .day-info { flex: 1; }
+        .day-name { font-weight: 700; font-size: 15px; color: var(--text-main); margin-bottom: 4px; }
+        .day-time-range { font-size: 13px; color: var(--text-sec); font-family: monospace; font-weight: 500;}
+
+        .day-stats { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
+        .day-earn { color: var(--success); font-weight: 700; font-size: 15px; }
+        .day-dur { font-size: 11px; color: var(--text-sec); font-weight: 700; background: #f0f2f5; padding: 3px 6px; border-radius: 4px; margin-top: 4px; }
+
+        .edit-btn {
+            background: transparent;
+            color: var(--accent-blue);
+            border: 1px solid #E1E8ED;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            margin-left: 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .edit-btn:active { background: #f0f9ff; }
+
+        /* --- MODALS --- */
+        .modal {
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            background: #FFFFFF;
+            width: 90%; max-width: 380px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            z-index: 1001;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .modal.active { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+
+        .modal h2 { margin: 0 0 20px 0; font-size: 20px; font-weight: 800; color: var(--text-main); }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: var(--text-sec); font-size: 12px; font-weight: 700; text-transform: uppercase; }
+        .form-group input { 
+            width: 100%; padding: 14px; 
+            background: #F8F9FA;
+            border: 2px solid #E1E8ED; border-radius: 8px; 
+            font-size: 18px; box-sizing: border-box; 
+            color: var(--text-main);
+            outline: none;
+            font-family: inherit;
+        }
+        .form-group input:focus { border-color: var(--accent-blue); background: white; }
+
+        .modal-buttons { display: flex; gap: 12px; margin-top: 20px; }
+        .btn { flex: 1; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+        .btn-cancel { background: #F0F2F5; color: var(--text-sec); }
+        .btn-save { background: var(--text-main); color: white; }
+        .btn-delete { background: white; border: 2px solid var(--danger); color: var(--danger); width: 100%; margin-top: 12px; }
+
+        .rate-display {
+            text-align: center; color: var(--text-sec); font-size: 13px; margin-top: 20px; font-weight: 500;
+        }
+        
+        .empty-state {
+            text-align: center; padding: 40px 20px; color: #999; border: 2px dashed #ccc; border-radius: 12px; margin-bottom: 20px;
+        }
+
+        input[type="datetime-local"] { color-scheme: light; }
+
+    </style>
+</head>
+<body>
+
+    <!-- OVERLAY -->
+    <div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+    <!-- SIDEBAR MENU -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">Hours Tracker</div>
+        <div class="sidebar-item" onclick="openModal('modal-add')">
+            <span>➕</span> Manual Entry
+        </div>
+        <div class="sidebar-item" onclick="openModal('modal-settings')">
+            <span>⚙️</span> Settings
+        </div>
+        <div class="sidebar-item" onclick="exportData()">
+            <span>💾</span> Backup Data
+        </div>
+        <div class="sidebar-item" style="color: var(--danger);" onclick="clearData()">
+            <span>🗑</span> Reset App
+        </div>
+    </div>
+
+    <!-- HEADER with Logo -->
+    <div class="top-bar">
+        <button class="menu-btn" onclick="toggleMenu()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/3W4T5Hj/logo.png" alt="Tiles Unlimited" class="app-logo">
+        </div>
+        <div style="width: 24px;"></div> <!-- Spacer to balance menu button -->
+    </div>
+
+    <!-- PUNCH CLOCK -->
+    <div class="punch-section">
+        <div class="live-timer" id="main-timer">00:00:00</div>
+        
+        <button id="punch-btn" class="punch-btn btn-in" onclick="togglePunch()">
+            <div class="btn-icon" id="btn-icon">▶</div>
+            <div class="btn-label-group">
+                <span class="btn-main-text" id="btn-text">PUNCH IN</span>
+                <span class="btn-sub-text" id="btn-sub">Start Shift</span>
+            </div>
+        </button>
+    </div>
+
+    <!-- SCROLL AREA FOR CARDS -->
+    <div class="scroll-container" id="cards-container">
+        <!-- Javascript will inject cards here -->
+    </div>
+    
+    <div style="text-align:center; padding-bottom: 20px;">
+         <span style="color:var(--text-sec); font-size:12px; font-weight:600; text-transform:uppercase;">Rate: </span>
+         <span id="display-rate" style="font-weight:800; color: var(--text-main); font-size:14px;">$0.00</span>
+    </div>
+
+    <!-- MODAL: SETTINGS -->
+    <div class="modal" id="modal-settings">
+        <h2>Job Settings</h2>
+        <div class="form-group">
+            <label>Hourly Wage ($)</label>
+            <input type="number" id="wage-input" placeholder="0.00">
+        </div>
+        <div class="modal-buttons">
+            <button class="btn btn-cancel" onclick="closeAll()">Cancel</button>
+            <button class="btn btn-save" onclick="saveSettings()">Save</button>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD ENTRY -->
+    <div class="modal" id="modal-add">
+        <h2>Manual Log</h2>
+        <div class="form-group">
+            <label>Start Time</label>
+            <input type="datetime-local" id="add-start">
+        </div>
+        <div class="form-group">
+            <label>End Time</label>
+            <input type="datetime-local" id="add-end">
+        </div>
+        <div class="modal-buttons">
+            <button class="btn btn-cancel" onclick="closeAll()">Cancel</button>
+            <button class="btn btn-save" onclick="addManualEntry()">Add Log</button>
+        </div>
+    </div>
+
+    <!-- MODAL: EDIT ENTRY -->
+    <div class="modal" id="modal-edit">
+        <h2>Edit Shift</h2>
+        <input type="hidden" id="edit-id">
+        <div class="form-group">
+            <label>Start Time</label>
+            <input type="datetime-local" id="edit-start">
+        </div>
+        <div class="form-group">
+            <label>End Time</label>
+            <input type="datetime-local" id="edit-end">
+        </div>
+        <div class="modal-buttons">
+            <button class="btn btn-cancel" onclick="closeAll()">Cancel</button>
+            <button class="btn btn-save" onclick="saveEdit()">Update</button>
+        </div>
+        <button class="btn btn-delete" onclick="deleteEntry()">Delete Log</button>
+    </div>
+
+    <script>
+        // --- DATA MODEL ---
+        let state = {
+            sessions: [],
+            isPunchedIn: false,
+            currentStart: null,
+            hourlyWage: 25.00 
+        };
+
+        window.onload = function() {
+            loadData();
+            renderUI();
+            setInterval(tick, 1000);
+        };
+
+        // --- STORAGE ---
+        function loadData() {
+            const saved = localStorage.getItem('hoursTrackerState_v9');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                state = parsed;
+                if(state.currentStart) state.currentStart = new Date(state.currentStart);
+                state.sessions.forEach(s => {
+                    s.startTime = new Date(s.startTime);
+                    s.endTime = new Date(s.endTime);
+                });
+            }
+        }
+
+        function saveData() {
+            state.sessions.sort((a, b) => b.startTime - a.startTime);
+            localStorage.setItem('hoursTrackerState_v9', JSON.stringify(state));
+            renderUI();
+        }
+
+        // --- ACTIONS ---
+        function togglePunch() {
+            if (state.isPunchedIn) {
+                const end = new Date();
+                const session = {
+                    id: Date.now(),
+                    startTime: state.currentStart,
+                    endTime: end,
+                    duration: end - state.currentStart
+                };
+                state.sessions.push(session);
+                state.isPunchedIn = false;
+                state.currentStart = null;
+            } else {
+                state.currentStart = new Date();
+                state.isPunchedIn = true;
+            }
+            saveData();
+        }
+
+        function tick() {
+            if (state.isPunchedIn && state.currentStart) {
+                const diff = new Date() - state.currentStart;
+                document.getElementById('main-timer').innerText = formatHMS(diff);
+                // Also refresh stats to show live earnings in top card
+                renderWeeks();
+            }
+        }
+
+        // --- MANUAL / EDIT ---
+        function addManualEntry() {
+            const startStr = document.getElementById('add-start').value;
+            const endStr = document.getElementById('add-end').value;
+            if(!startStr || !endStr) return alert("Please fill both start and end times.");
+            const start = new Date(startStr);
+            const end = new Date(endStr);
+            if(isNaN(start.getTime()) || isNaN(end.getTime())) return alert("Invalid date.");
+            if(end <= start) return alert("End time must be after start time");
+
+            state.sessions.push({ id: Date.now(), startTime: start, endTime: end, duration: end - start });
+            document.getElementById('add-start').value = "";
+            document.getElementById('add-end').value = "";
+            closeAll(); saveData();
+        }
+
+        function openEdit(id) {
+            const session = state.sessions.find(s => s.id === id);
+            if(!session) return;
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-start').value = toLocalISO(session.startTime);
+            document.getElementById('edit-end').value = toLocalISO(session.endTime);
+            openModal('modal-edit');
+        }
+
+        function saveEdit() {
+            const id = parseInt(document.getElementById('edit-id').value);
+            const start = new Date(document.getElementById('edit-start').value);
+            const end = new Date(document.getElementById('edit-end').value);
+            if(end <= start) return alert("End time must be after start time");
+
+            const idx = state.sessions.findIndex(s => s.id === id);
+            if(idx > -1) {
+                state.sessions[idx].startTime = start;
+                state.sessions[idx].endTime = end;
+                state.sessions[idx].duration = end - start;
+                saveData(); closeAll();
+            }
+        }
+
+        function deleteEntry() {
+            const id = parseInt(document.getElementById('edit-id').value);
+            if(confirm("Delete this entry?")) {
+                state.sessions = state.sessions.filter(s => s.id !== id);
+                saveData(); closeAll();
+            }
+        }
+
+        function saveSettings() {
+            const wage = parseFloat(document.getElementById('wage-input').value);
+            if(wage >= 0) { state.hourlyWage = wage; saveData(); closeAll(); }
+        }
+
+        // --- MAIN UI RENDER ---
+        function renderUI() {
+            // Button Logic
+            const btn = document.getElementById('punch-btn');
+            const btnTxt = document.getElementById('btn-text');
+            const btnSub = document.getElementById('btn-sub');
+            const btnIcon = document.getElementById('btn-icon');
+            
+            if (state.isPunchedIn) {
+                btn.className = 'punch-btn btn-out';
+                btnTxt.innerText = "PUNCH OUT";
+                btnSub.innerText = "End Shift";
+                btnIcon.innerText = "⏹";
+            } else {
+                btn.className = 'punch-btn btn-in';
+                btnTxt.innerText = "PUNCH IN";
+                btnSub.innerText = "Start Shift";
+                btnIcon.innerText = "▶";
+                document.getElementById('main-timer').innerText = "00:00:00";
+            }
+
+            document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage);
+            document.getElementById('wage-input').value = state.hourlyWage;
+
+            renderWeeks();
+        }
+
+        // --- WEEKLY GROUPING LOGIC ---
+        function renderWeeks() {
+            const container = document.getElementById('cards-container');
+            container.innerHTML = "";
+
+            // 1. Group Sessions by Week (Sunday-Saturday)
+            const grouped = {};
+            
+            // Helper to get the Sunday of the week for any date
+            const getWeekStart = (date) => {
+                const d = new Date(date);
+                d.setHours(0,0,0,0);
+                d.setDate(d.getDate() - d.getDay()); // Go back to Sunday
+                return d;
+            };
+
+            // Add Saved Sessions
+            state.sessions.forEach(session => {
+                const sunday = getWeekStart(session.startTime).getTime();
+                if(!grouped[sunday]) grouped[sunday] = { weekStart: new Date(sunday), sessions: [], totalDuration: 0 };
+                grouped[sunday].sessions.push(session);
+                grouped[sunday].totalDuration += session.duration;
+            });
+
+            // Add Current Live Session (if active)
+            if(state.isPunchedIn && state.currentStart) {
+                const sunday = getWeekStart(state.currentStart).getTime();
+                if(!grouped[sunday]) grouped[sunday] = { weekStart: new Date(sunday), sessions: [], totalDuration: 0 };
+                const currentDuration = new Date() - state.currentStart;
+                grouped[sunday].totalDuration += currentDuration;
+            }
+
+            // 2. Sort Weeks (Newest First)
+            const sortedWeekKeys = Object.keys(grouped).sort((a,b) => b - a);
+
+            if(sortedWeekKeys.length === 0 && !state.isPunchedIn) {
+                container.innerHTML = `<div class="empty-state">No jobs logged.<br><span style="font-size:12px">Punch in to start tracking.</span></div>`;
+                return;
+            }
+
+            // 3. Render Cards
+            sortedWeekKeys.forEach(key => {
+                const group = grouped[key];
+                const startOfWeek = group.weekStart;
+                const endOfWeek = new Date(startOfWeek);
+                endOfWeek.setDate(endOfWeek.getDate() + 6); // Saturday
+
+                const dateRangeStr = `${formatShortDate(startOfWeek)} - ${formatShortDate(endOfWeek)}`;
+                
+                // Sort sessions within the week (Newest first)
+                group.sessions.sort((a,b) => b.startTime - a.startTime);
+
+                let rowsHTML = "";
+                
+                // Live Session Row
+                if(state.isPunchedIn && getWeekStart(state.currentStart).getTime() == key) {
+                    const currentDuration = new Date() - state.currentStart;
+                    rowsHTML += `
+                        <li class="day-row" style="background:#fffcf5; border-left: 3px solid var(--accent-orange);">
+                            <div class="day-info">
+                                <div class="day-name" style="color:var(--accent-orange)">IN PROGRESS</div>
+                                <div class="day-time-range" style="color:var(--text-sec);">
+                                   ${formatTime(state.currentStart)} - Now
+                                </div>
+                            </div>
+                            <div class="day-stats">
+                                <div class="day-earn" style="color:var(--accent-orange)">${formatMoney(calcEarn(currentDuration))}</div>
+                                <div class="day-dur">${formatDuration(currentDuration)}</div>
+                            </div>
+                        </li>
+                    `;
+                }
+
+                group.sessions.forEach(s => {
+                    const dateName = s.startTime.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                    const timeRange = `${formatTime(s.startTime)} - ${formatTime(s.endTime)}`;
+                    
+                    rowsHTML += `
+                        <li class="day-row">
+                            <div class="day-info">
+                                <div class="day-name">${dateName}</div>
+                                <div class="day-time-range">${timeRange}</div>
+                            </div>
+                            <div class="day-stats">
+                                <div class="day-earn">${formatMoney(calcEarn(s.duration))}</div>
+                                <div class="day-dur">${formatDuration(s.duration)}</div>
+                            </div>
+                            <button class="edit-btn" onclick="openEdit(${s.id})">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            </button>
+                        </li>
+                    `;
+                });
+
+                const cardHTML = `
+                    <div class="main-card">
+                        <div class="card-header">
+                            <div class="header-left">
+                                <div class="header-label">PAY PERIOD</div>
+                                <div class="header-title">${dateRangeStr}</div>
+                            </div>
+                            <div class="header-right">
+                                <div class="total-pay-badge">${formatMoney(calcEarn(group.totalDuration))}</div>
+                                <div class="total-hrs-sub">${formatDuration(group.totalDuration)}</div>
+                            </div>
+                        </div>
+                        <ul class="day-list">
+                            ${rowsHTML}
+                        </ul>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+
+        // --- UTILS ---
+        function formatShortDate(d) { return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
+        function formatDuration(ms) {
+            const h = Math.floor(ms / 3600000);
+            const m = Math.floor((ms % 3600000) / 60000);
+            return `${h}h ${m}m`;
+        }
+        function formatHMS(ms) {
+            const sec = Math.floor(ms / 1000);
+            const h = Math.floor(sec / 3600);
+            const m = Math.floor((sec % 3600) / 60);
+            const s = sec % 60;
+            return `${pad(h)}:${pad(m)}:${pad(s)}`;
+        }
+        function pad(n) { return n < 10 ? '0'+n : n; }
+        function formatMoney(n) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n); }
+        function calcEarn(ms) { return (ms / 3600000) * state.hourlyWage; }
+        function formatTime(d) { return d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}); }
+        function toLocalISO(date) {
+            const offset = date.getTimezoneOffset() * 60000;
+            const local = new Date(date - offset);
+            return local.toISOString().slice(0, 16);
+        }
+
+        // --- UI TOGGLES ---
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+        function openModal(id) {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.add('active');
+            document.getElementById(id).classList.add('active');
+        }
+        function closeAll() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+            document.getElementById('overlay').classList.remove('active');
+        }
+        function clearData() {
+            if(confirm("Reset all data?")) { localStorage.removeItem('hoursTrackerState_v9'); location.reload(); }
+        }
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+            const node = document.createElement('a');
+            node.setAttribute("href", dataStr);
+            node.setAttribute("download", "floor_master_backup.json");
+            document.body.appendChild(node); node.click(); node.remove();
+        }
+    </script>
+</body>
+</html>
