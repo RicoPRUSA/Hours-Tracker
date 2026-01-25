@@ -32,7 +32,7 @@
             --btn-in-gradient: linear-gradient(135deg, #007696 0%, #005a75 100%); 
             --btn-out-gradient: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%); 
             
-            /* NEW: Header Gradient */
+            /* Header Gradient */
             --header-gradient: linear-gradient(135deg, #007696 0%, #00455c 100%);
         }
 
@@ -232,37 +232,21 @@
             margin-bottom: 25px;
         }
 
-        /* UPDATED HEADER STYLES */
+        /* --- WEEKLY CARD HEADER STYLES --- */
         .card-header {
-            background: var(--header-gradient); /* Teal Gradient */
+            background: var(--header-gradient);
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: white; /* Text color change for contrast */
-        }
-
-        @media (max-width: 480px) {
-            .card-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
-            }
-            .header-left {
-                align-items: center;
-                text-align: center;
-            }
-            .header-right {
-                justify-content: center;
-            }
+            color: white;
         }
 
         .header-left { display: flex; flex-direction: column; }
         
-        /* Updated text colors for the gradient background */
         .header-label { 
             font-size: 11px; 
-            color: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
+            color: rgba(255, 255, 255, 0.85); 
             font-weight: 700; 
             text-transform: uppercase; 
             letter-spacing: 1px; 
@@ -271,7 +255,7 @@
         .header-title { 
             font-size: 15px; 
             font-weight: 800; 
-            color: #ffffff; /* Pure white */
+            color: #ffffff; 
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
@@ -307,7 +291,6 @@
             font-weight: 600; 
         }
 
-        /* NEW DELETE WEEK BUTTON */
         .header-delete-btn {
             background: rgba(255,255,255,0.1);
             border: none;
@@ -322,7 +305,42 @@
             transition: background 0.2s;
         }
         .header-delete-btn:active {
-            background: rgba(255,59,48,0.8); /* Red on click */
+            background: rgba(255,59,48,0.8);
+        }
+
+        /* --- MOBILE HEADER STACKING --- */
+        @media (max-width: 480px) {
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .header-left {
+                width: 100%;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+                padding-bottom: 10px;
+                margin-bottom: 0;
+            }
+
+            .header-title {
+                font-size: 18px; /* Bigger on mobile for easier reading */
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between; /* Split Left/Right */
+                align-items: center;
+            }
+
+            .stats-group {
+                flex-direction: row; /* Put Money and Hours side-by-side on mobile */
+                align-items: center;
+                gap: 10px;
+            }
+
+            .total-pay-badge { margin-bottom: 0; font-size: 18px; }
+            .total-hrs-sub { font-size: 14px; }
         }
 
         /* LIST */
@@ -532,7 +550,7 @@
 
         // --- STORAGE ---
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_v14');
+            const saved = localStorage.getItem('hoursTrackerState_v15');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -546,7 +564,7 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_v14', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_v15', JSON.stringify(state));
             renderUI();
         }
 
@@ -581,7 +599,6 @@
         // --- WEEK DELETION ---
         function deleteWeek(sundayTimestamp) {
             if(confirm("Are you sure you want to delete this ENTIRE week of data? This cannot be undone.")) {
-                // Filter out any sessions where the week start (Sunday) matches the timestamp
                 state.sessions = state.sessions.filter(s => {
                     const d = new Date(s.startTime);
                     d.setHours(0,0,0,0);
@@ -821,7 +838,7 @@
             document.getElementById('overlay').classList.remove('active');
         }
         function clearData() {
-            if(confirm("Reset all data?")) { localStorage.removeItem('hoursTrackerState_v14'); location.reload(); }
+            if(confirm("Reset all data?")) { localStorage.removeItem('hoursTrackerState_v15'); location.reload(); }
         }
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
