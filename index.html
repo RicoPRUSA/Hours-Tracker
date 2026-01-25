@@ -85,24 +85,6 @@
             line-height: 1;
         }
 
-        @media (max-width: 480px) {
-            .header-center {
-                flex-direction: column; 
-                gap: 4px; 
-            }
-            .app-logo {
-                height: 36px; 
-                max-width: 160px;
-            }
-            .app-title {
-                font-size: 11px; 
-                padding-left: 0;
-                border-left: none; 
-                color: var(--text-sec); 
-                font-weight: 800;
-            }
-        }
-
         .menu-btn {
             font-size: 24px;
             background: none;
@@ -183,11 +165,6 @@
             letter-spacing: -2px;
         }
 
-        @media (max-width: 400px) {
-            .live-timer { font-size: 48px; margin-bottom: 20px; }
-            .punch-section { padding: 30px 20px; }
-        }
-
         .punch-btn {
             width: 100%;
             max-width: 320px;
@@ -232,7 +209,7 @@
             margin-bottom: 25px;
         }
 
-        /* --- WEEKLY CARD HEADER STYLES --- */
+        /* --- HEADER --- */
         .card-header {
             background: var(--header-gradient);
             padding: 15px 20px;
@@ -304,46 +281,9 @@
             font-size: 16px;
             transition: background 0.2s;
         }
-        .header-delete-btn:active {
-            background: rgba(255,59,48,0.8);
-        }
+        .header-delete-btn:active { background: rgba(255,59,48,0.8); }
 
-        /* --- MOBILE HEADER STACKING --- */
-        @media (max-width: 480px) {
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-
-            .header-left {
-                width: 100%;
-                border-bottom: 1px solid rgba(255,255,255,0.2);
-                padding-bottom: 10px;
-                margin-bottom: 0;
-            }
-
-            .header-title {
-                font-size: 18px; /* Bigger on mobile for easier reading */
-            }
-
-            .header-right {
-                width: 100%;
-                justify-content: space-between; /* Split Left/Right */
-                align-items: center;
-            }
-
-            .stats-group {
-                flex-direction: row; /* Put Money and Hours side-by-side on mobile */
-                align-items: center;
-                gap: 10px;
-            }
-
-            .total-pay-badge { margin-bottom: 0; font-size: 18px; }
-            .total-hrs-sub { font-size: 14px; }
-        }
-
-        /* LIST */
+        /* LIST ITEM STYLES */
         .day-list { list-style: none; padding: 0; margin: 0; }
 
         .day-row {
@@ -376,6 +316,115 @@
             transition: background 0.1s;
         }
         .edit-btn:active { background: #f0f9ff; }
+
+        /* ================= MOBILE OPTIMIZATIONS ================= */
+        @media (max-width: 480px) {
+            
+            /* 1. Header Changes */
+            .header-center {
+                flex-direction: column; 
+                gap: 4px; 
+            }
+            .app-logo {
+                height: 36px; 
+                max-width: 160px;
+            }
+            .app-title {
+                font-size: 11px; 
+                padding-left: 0;
+                border-left: none; 
+                color: var(--text-sec); 
+                font-weight: 800;
+            }
+
+            /* 2. Compact Control Panel */
+            .punch-section {
+                padding: 15px 15px 20px 15px; /* Tighter padding */
+            }
+            .live-timer {
+                font-size: 42px; /* Smaller Timer */
+                margin-bottom: 12px;
+            }
+            .punch-btn {
+                height: 60px; /* Shorter Button */
+                gap: 10px;
+            }
+            .btn-main-text { font-size: 20px; }
+            .btn-sub-text { font-size: 11px; }
+            .btn-icon { font-size: 22px; }
+
+            /* 3. Wider Cards */
+            .scroll-container {
+                padding: 15px 8px; /* Very narrow side padding for max width */
+            }
+            .main-card {
+                border-radius: 8px;
+            }
+
+            /* 4. Card Header Stacking */
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 12px 15px;
+            }
+            .header-left {
+                width: 100%;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+                padding-bottom: 8px;
+            }
+            .header-title { font-size: 16px; }
+            .header-right {
+                width: 100%;
+                justify-content: space-between; /* Spread content */
+            }
+            .stats-group {
+                flex-direction: row;
+                gap: 12px;
+                align-items: center;
+            }
+            .total-pay-badge { margin-bottom: 0; font-size: 16px; }
+
+            /* 5. List Items Stacking (Day on top, Salary on bottom) */
+            .day-row {
+                flex-direction: column;
+                align-items: flex-start;
+                position: relative;
+                padding: 12px 15px;
+            }
+
+            .day-info {
+                width: 100%;
+                margin-bottom: 6px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap; /* Allows date/time to sit nicely */
+            }
+            
+            .day-name { margin-bottom: 0; font-size: 15px; }
+            .day-time-range { font-size: 13px; }
+
+            .day-stats {
+                width: 100%;
+                flex-direction: row; /* Inline */
+                justify-content: flex-start; /* Left aligned */
+                gap: 15px; /* Space between money and hours */
+                align-items: center;
+            }
+
+            .day-earn { font-size: 16px; font-weight: 800; }
+            .day-dur { margin-top: 0; background: transparent; padding: 0; color: #7F8C8D; font-size: 13px;}
+
+            /* Edit button absolute position to not interfere with stacking */
+            .edit-btn {
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+                border: none; /* Cleaner look on mobile */
+            }
+        }
 
         /* --- MODALS --- */
         .modal {
@@ -550,7 +599,7 @@
 
         // --- STORAGE ---
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_v15');
+            const saved = localStorage.getItem('hoursTrackerState_v16');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -564,7 +613,7 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_v15', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_v16', JSON.stringify(state));
             renderUI();
         }
 
@@ -838,7 +887,7 @@
             document.getElementById('overlay').classList.remove('active');
         }
         function clearData() {
-            if(confirm("Reset all data?")) { localStorage.removeItem('hoursTrackerState_v15'); location.reload(); }
+            if(confirm("Reset all data?")) { localStorage.removeItem('hoursTrackerState_v16'); location.reload(); }
         }
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
