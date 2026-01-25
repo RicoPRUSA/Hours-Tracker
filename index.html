@@ -3,29 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- APP ICONS (Square Logo) -->
+    <link rel="icon" href="https://github.com/RicoPRUSA/Hours-Tracker/blob/main/TU%20LOGO.PNG?raw=true">
+    <link rel="apple-touch-icon" href="https://github.com/RicoPRUSA/Hours-Tracker/blob/main/TU%20LOGO.PNG?raw=true">
+    
     <title>Hours Tracker</title>
     <style>
         :root {
-            /* SUBFLOOR PALETTE (Warmer) */
-            --bg-color: #F5F0EB;       /* Warm Beige (Subfloor/Plywood tone) */
-            --card-bg: #FFFFFF;        /* Pure White (Cards) */
-            --control-bg: #FFFFFF;     /* Pure White (Punch Section) */
+            /* SUBFLOOR PALETTE */
+            --bg-color: #F5F0EB;       
+            --card-bg: #FFFFFF;        
+            --control-bg: #FFFFFF;     
             
-            --text-main: #2C3E50;      /* Dark Navy Slate */
-            --text-sec: #7F8C8D;       /* Cool Grey */
-            --border: #E2DED9;         /* Warm Grey Border */
+            --text-main: #2C3E50;      
+            --text-sec: #7F8C8D;       
+            --border: #E2DED9;         
             
-            /* Accents based on your Logo */
+            /* Accents */
+            --accent-teal: #007696;    
+            --accent-red: #D32F2F;     
             --accent-orange: #E67E22;  
-            --accent-blue: #007696;    /* Teal from logo icon */
-            --accent-red: #D32F2F;     /* Red from logo text */
             
-            --success: #27AE60;        /* Emerald Green */
-            --danger: #C0392B;         /* Brick Red */
+            --success: #27AE60;        
+            --danger: #C0392B;         
             
             /* Gradients */
-            --btn-in-gradient: linear-gradient(135deg, #007696 0%, #005a75 100%); /* Teal branding */
-            --btn-out-gradient: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%); /* Red branding */
+            --btn-in-gradient: linear-gradient(135deg, #007696 0%, #005a75 100%); 
+            --btn-out-gradient: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%); 
         }
 
         body {
@@ -42,28 +47,60 @@
 
         /* --- HEADER --- */
         .top-bar {
-            padding: 10px 20px;
+            padding: 10px 15px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: var(--control-bg);
             border-bottom: 1px solid var(--border); 
             z-index: 100;
-            height: 50px; /* Fixed height for consistency */
+            height: 60px;
         }
 
-        /* LOGO CONTAINER */
-        .logo-container {
+        .header-center {
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100%;
+            gap: 10px;
+            /* Allow shrinking on mobile so it doesn't push buttons off screen */
+            flex: 1; 
+            overflow: hidden; 
         }
-        
+
+        /* LOGO STYLING */
         .app-logo {
-            max-height: 40px; /* Constraints logo height */
+            height: 38px; 
             width: auto;
             object-fit: contain;
+            /* Prevent logo from being too huge on mobile */
+            max-width: 140px; 
+        }
+
+        .app-title {
+            font-weight: 900;
+            font-size: 15px;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-left: 10px;
+            border-left: 2px solid #ddd;
+            line-height: 1;
+            white-space: nowrap; /* Keep text on one line */
+        }
+
+        /* MOBILE FIXES */
+        @media (max-width: 480px) {
+            .app-logo {
+                height: 28px; /* Smaller logo on phone */
+                max-width: 110px;
+            }
+            .app-title {
+                font-size: 12px; /* Smaller text on phone */
+                padding-left: 8px;
+            }
+            .header-center {
+                gap: 6px;
+            }
         }
 
         .menu-btn {
@@ -73,6 +110,9 @@
             cursor: pointer;
             padding: 5px;
             color: var(--text-main);
+            display: flex;
+            align-items: center;
+            min-width: 40px; /* Ensure button area is tappable */
         }
 
         /* --- SIDEBAR MENU --- */
@@ -143,6 +183,11 @@
             letter-spacing: -2px;
         }
 
+        /* Responsive Timer Text */
+        @media (max-width: 400px) {
+            .live-timer { font-size: 48px; }
+        }
+
         /* RECTANGLE BUTTON */
         .punch-btn {
             width: 100%;
@@ -195,7 +240,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-left: 5px solid var(--accent-blue); /* Match logo blue */
+            border-left: 5px solid var(--accent-teal); /* Teal from logo */
         }
 
         .header-left { display: flex; flex-direction: column; }
@@ -237,7 +282,7 @@
 
         .edit-btn {
             background: transparent;
-            color: var(--accent-blue);
+            color: var(--accent-teal);
             border: 1px solid #E1E8ED;
             width: 36px; height: 36px;
             border-radius: 50%;
@@ -277,7 +322,7 @@
             outline: none;
             font-family: inherit;
         }
-        .form-group input:focus { border-color: var(--accent-blue); background: white; }
+        .form-group input:focus { border-color: var(--accent-teal); background: white; }
 
         .modal-buttons { display: flex; gap: 12px; margin-top: 20px; }
         .btn { flex: 1; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
@@ -324,10 +369,14 @@
         <button class="menu-btn" onclick="toggleMenu()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
-        <div class="logo-container">
-            <img src="https://i.ibb.co/3W4T5Hj/logo.png" alt="Tiles Unlimited" class="app-logo">
+        
+        <!-- CENTER: WIDE LOGO + TITLE -->
+        <div class="header-center">
+            <img src="https://github.com/RicoPRUSA/Hours-Tracker/blob/main/TU%20LOGO%20WITH%20NAME%20LARGE.PNG?raw=true" alt="Tiles Unlimited" class="app-logo">
+            <div class="app-title">HOURS TRACKER</div>
         </div>
-        <div style="width: 24px;"></div> <!-- Spacer to balance menu button -->
+        
+        <div style="width: 24px;"></div> <!-- Spacer -->
     </div>
 
     <!-- PUNCH CLOCK -->
@@ -419,7 +468,7 @@
 
         // --- STORAGE ---
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_v9');
+            const saved = localStorage.getItem('hoursTrackerState_v12');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -433,7 +482,7 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_v9', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_v12', JSON.stringify(state));
             renderUI();
         }
 
@@ -461,7 +510,6 @@
             if (state.isPunchedIn && state.currentStart) {
                 const diff = new Date() - state.currentStart;
                 document.getElementById('main-timer').innerText = formatHMS(diff);
-                // Also refresh stats to show live earnings in top card
                 renderWeeks();
             }
         }
@@ -521,7 +569,6 @@
 
         // --- MAIN UI RENDER ---
         function renderUI() {
-            // Button Logic
             const btn = document.getElementById('punch-btn');
             const btnTxt = document.getElementById('btn-text');
             const btnSub = document.getElementById('btn-sub');
@@ -551,18 +598,14 @@
             const container = document.getElementById('cards-container');
             container.innerHTML = "";
 
-            // 1. Group Sessions by Week (Sunday-Saturday)
             const grouped = {};
-            
-            // Helper to get the Sunday of the week for any date
             const getWeekStart = (date) => {
                 const d = new Date(date);
                 d.setHours(0,0,0,0);
-                d.setDate(d.getDate() - d.getDay()); // Go back to Sunday
+                d.setDate(d.getDate() - d.getDay()); 
                 return d;
             };
 
-            // Add Saved Sessions
             state.sessions.forEach(session => {
                 const sunday = getWeekStart(session.startTime).getTime();
                 if(!grouped[sunday]) grouped[sunday] = { weekStart: new Date(sunday), sessions: [], totalDuration: 0 };
@@ -570,7 +613,6 @@
                 grouped[sunday].totalDuration += session.duration;
             });
 
-            // Add Current Live Session (if active)
             if(state.isPunchedIn && state.currentStart) {
                 const sunday = getWeekStart(state.currentStart).getTime();
                 if(!grouped[sunday]) grouped[sunday] = { weekStart: new Date(sunday), sessions: [], totalDuration: 0 };
@@ -578,7 +620,6 @@
                 grouped[sunday].totalDuration += currentDuration;
             }
 
-            // 2. Sort Weeks (Newest First)
             const sortedWeekKeys = Object.keys(grouped).sort((a,b) => b - a);
 
             if(sortedWeekKeys.length === 0 && !state.isPunchedIn) {
@@ -586,21 +627,17 @@
                 return;
             }
 
-            // 3. Render Cards
             sortedWeekKeys.forEach(key => {
                 const group = grouped[key];
                 const startOfWeek = group.weekStart;
                 const endOfWeek = new Date(startOfWeek);
-                endOfWeek.setDate(endOfWeek.getDate() + 6); // Saturday
+                endOfWeek.setDate(endOfWeek.getDate() + 6); 
 
                 const dateRangeStr = `${formatShortDate(startOfWeek)} - ${formatShortDate(endOfWeek)}`;
-                
-                // Sort sessions within the week (Newest first)
                 group.sessions.sort((a,b) => b.startTime - a.startTime);
 
                 let rowsHTML = "";
                 
-                // Live Session Row
                 if(state.isPunchedIn && getWeekStart(state.currentStart).getTime() == key) {
                     const currentDuration = new Date() - state.currentStart;
                     rowsHTML += `
@@ -701,7 +738,7 @@
             document.getElementById('overlay').classList.remove('active');
         }
         function clearData() {
-            if(confirm("Reset all data?")) { localStorage.removeItem('hoursTrackerState_v9'); location.reload(); }
+            if(confirm("Reset all data?")) { localStorage.removeItem('hoursTrackerState_v12'); location.reload(); }
         }
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
