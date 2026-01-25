@@ -11,19 +11,20 @@
     <title>Hours Tracker</title>
     <style>
         :root {
-            /* SUBFLOOR PALETTE */
-            --bg-color: #F5F0EB;       
+            /* PALETTE - Background Darkened Slightly */
+            --bg-color: #E6E0DA;       /* Slightly darker beige */
             --card-bg: #FFFFFF;        
             --control-bg: #FFFFFF;     
             
             --text-main: #2C3E50;      
             --text-sec: #7F8C8D;       
-            --border: #E2DED9;         
+            --border: #D6D2CE;         
             
             /* Accents */
             --accent-teal: #007696;    
             --accent-red: #D32F2F;     
-            --accent-orange: #E67E22;  
+            --accent-orange: #E67E22;
+            --accent-neon: #CCFF00;    /* Neon Green for Salary */
             
             --success: #27AE60;        
             --danger: #C0392B;         
@@ -57,7 +58,7 @@
             background: var(--control-bg);
             border-bottom: 1px solid var(--border); 
             z-index: 100;
-            min-height: 60px; 
+            min-height: 55px; 
         }
 
         .header-center {
@@ -159,13 +160,13 @@
         }
         .overlay.active { display: block; }
 
-        /* --- PUNCH SECTION --- */
+        /* --- PUNCH SECTION (COMPACT & LIGHTER FONTS) --- */
         .punch-section {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
+            padding: 25px 20px; /* Reduced padding */
             background: var(--control-bg);
             box-shadow: 0 4px 20px rgba(139, 119, 101, 0.1);
             border-bottom: 1px solid var(--border);
@@ -174,42 +175,49 @@
         }
 
         .live-timer {
-            font-size: 60px;
-            font-weight: 700;
+            font-size: 56px;
+            font-weight: 300; /* Thinner font */
             font-variant-numeric: tabular-nums;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             color: var(--text-main);
-            font-family: monospace;
-            letter-spacing: -2px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            letter-spacing: -1px;
+        }
+
+        @media (max-width: 400px) {
+            .live-timer { font-size: 42px; margin-bottom: 15px; }
+            .punch-section { padding: 20px 15px; }
         }
 
         .punch-btn {
             width: 100%;
-            max-width: 320px;
-            height: 80px;
+            max-width: 300px;
+            height: 65px; /* More compact */
             border-radius: 8px;
             border: none;
             color: white;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
             transition: all 0.1s;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
             position: relative;
             overflow: hidden;
         }
 
-        .punch-btn:active { transform: scale(0.98); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .punch-btn:active { transform: scale(0.98); box-shadow: 0 3px 8px rgba(0,0,0,0.2); }
         .btn-in { background: var(--btn-in-gradient); }
         .btn-out { background: var(--btn-out-gradient); }
 
         .btn-label-group { display: flex; flex-direction: column; align-items: flex-start; }
-        .btn-main-text { font-size: 24px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; }
-        .btn-sub-text { font-size: 13px; opacity: 0.9; font-weight: 600; text-transform: uppercase; }
-        .btn-icon { font-size: 28px; }
+        
+        /* Lighter weights for button text */
+        .btn-main-text { font-size: 20px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+        .btn-sub-text { font-size: 11px; opacity: 0.9; font-weight: 400; text-transform: uppercase; }
+        .btn-icon { font-size: 24px; }
 
         /* --- CARDS CONTAINER --- */
         .scroll-container {
@@ -227,7 +235,7 @@
             margin-bottom: 25px;
         }
 
-        /* --- HEADER --- */
+        /* --- CARD HEADER (UPDATED) --- */
         .card-header {
             background: var(--header-gradient);
             padding: 15px 20px;
@@ -241,15 +249,15 @@
         
         .header-label { 
             font-size: 11px; 
-            color: rgba(255, 255, 255, 0.85); 
-            font-weight: 700; 
+            color: rgba(255, 255, 255, 0.8); 
+            font-weight: 500; 
             text-transform: uppercase; 
             letter-spacing: 1px; 
             margin-bottom: 4px; 
         }
         .header-title { 
             font-size: 15px; 
-            font-weight: 800; 
+            font-weight: 700; 
             color: #ffffff; 
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
@@ -264,28 +272,25 @@
         .stats-group {
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
+            align-items: flex-end; /* Default right alignment for desktop */
+        }
+
+        /* SWAPPED POSITIONS IN JS, STYLES UPDATED HERE */
+        .total-hrs-sub { 
+            font-size: 13px; 
+            color: rgba(255,255,255,0.9); 
+            font-weight: 500; 
+            margin-bottom: 2px;
         }
 
         .total-pay-badge {
-            background: rgba(255,255,255,0.2);
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 16px;
+            color: var(--accent-neon); /* NEON GREEN */
+            font-size: 19px;
             font-weight: 700;
-            display: inline-block;
-            margin-bottom: 4px;
-            border: 1px solid rgba(255,255,255,0.3);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            text-shadow: 0 0 10px rgba(0,0,0,0.2);
+            line-height: 1;
         }
         
-        .total-hrs-sub { 
-            font-size: 13px; 
-            color: rgba(255,255,255,0.85); 
-            font-weight: 600; 
-        }
-
         .header-delete-btn {
             background: rgba(255,255,255,0.1);
             border: none;
@@ -310,7 +315,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative; /* For absolute edit button */
+            position: relative; 
         }
         .day-row:last-child { border-bottom: none; }
 
@@ -356,58 +361,59 @@
                 font-weight: 800;
             }
 
-            /* 2. Compact Control Panel */
-            .punch-section {
-                padding: 15px 15px 20px 15px; 
-            }
-            .live-timer {
-                font-size: 42px; 
-                margin-bottom: 12px;
-            }
-            .punch-btn {
-                height: 60px; 
-                gap: 10px;
-            }
-            .btn-main-text { font-size: 20px; }
-            .btn-sub-text { font-size: 11px; }
-            .btn-icon { font-size: 22px; }
-
-            /* 3. Wider Cards */
+            /* 2. Wider Cards */
             .scroll-container {
-                padding: 15px 8px; /* Very narrow side padding */
+                padding: 15px 8px; 
             }
             .main-card {
                 border-radius: 8px;
             }
 
-            /* 4. Card Header Stacking */
+            /* 3. Card Header Stacking & Centering */
             .card-header {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: center; /* Center Content */
                 gap: 10px;
                 padding: 12px 15px;
+                text-align: center;
             }
             .header-left {
                 width: 100%;
                 border-bottom: 1px solid rgba(255,255,255,0.2);
                 padding-bottom: 8px;
+                margin-bottom: 4px;
+                align-items: center; /* Center Text */
             }
             .header-title { font-size: 16px; }
+            
             .header-right {
                 width: 100%;
-                justify-content: space-between; 
+                justify-content: center; /* Center the stats group */
+                position: relative; /* To position delete button */
             }
+            
             .stats-group {
-                flex-direction: row;
-                gap: 12px;
-                align-items: center;
+                flex-direction: row-reverse; /* Money on Right, Hours on Left inline */
+                gap: 15px;
+                align-items: baseline;
+                justify-content: center;
             }
-            .total-pay-badge { margin-bottom: 0; font-size: 16px; }
 
-            /* 5. CENTERED List Items + Inline Edit Button */
+            /* Delete button absolute right on mobile header line 2 */
+            .header-delete-btn {
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .total-pay-badge { margin-bottom: 0; font-size: 20px; }
+            .total-hrs-sub { font-size: 14px; }
+
+            /* 4. CENTERED List Items + Inline Edit Button */
             .day-row {
                 flex-direction: column;
-                align-items: center; /* Center Items */
+                align-items: center; 
                 padding: 12px 15px 15px 15px;
             }
 
@@ -416,7 +422,7 @@
                 margin-bottom: 8px;
                 display: flex;
                 flex-direction: column;
-                align-items: center; /* Center Content */
+                align-items: center; 
                 justify-content: center;
                 text-align: center;
             }
@@ -426,11 +432,11 @@
 
             .day-stats {
                 width: 100%;
-                flex-direction: row; /* Inline Salary & Hours */
-                justify-content: center; /* Center the stats row */
+                flex-direction: row; 
+                justify-content: center; 
                 align-items: center;
                 gap: 15px;
-                padding-left: 30px; /* Balance spacing against right button */
+                padding-left: 30px; 
                 padding-right: 30px; 
             }
 
@@ -630,7 +636,7 @@
 
         // --- STORAGE ---
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_v17');
+            const saved = localStorage.getItem('hoursTrackerState_v18');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -644,7 +650,7 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_v17', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_v18', JSON.stringify(state));
             renderUI();
         }
 
@@ -824,8 +830,8 @@
                                 </div>
                             </div>
                             <div class="day-stats">
-                                <div class="day-earn" style="color:var(--accent-orange)">${formatMoney(calcEarn(currentDuration))}</div>
                                 <div class="day-dur">${formatDuration(currentDuration)}</div>
+                                <div class="day-earn">${formatMoney(calcEarn(currentDuration))}</div>
                             </div>
                         </li>
                     `;
@@ -842,8 +848,8 @@
                                 <div class="day-time-range">${timeRange}</div>
                             </div>
                             <div class="day-stats">
-                                <div class="day-earn">${formatMoney(calcEarn(s.duration))}</div>
                                 <div class="day-dur">${formatDuration(s.duration)}</div>
+                                <div class="day-earn">${formatMoney(calcEarn(s.duration))}</div>
                             </div>
                             <button class="edit-btn" onclick="openEdit(${s.id})">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
@@ -861,8 +867,8 @@
                             </div>
                             <div class="header-right">
                                 <div class="stats-group">
-                                    <div class="total-pay-badge">${formatMoney(calcEarn(group.totalDuration))}</div>
                                     <div class="total-hrs-sub">${formatDuration(group.totalDuration)}</div>
+                                    <div class="total-pay-badge">${formatMoney(calcEarn(group.totalDuration))}</div>
                                 </div>
                                 <button class="header-delete-btn" onclick="deleteWeek(${key})" title="Delete Week">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
@@ -918,7 +924,7 @@
             document.getElementById('overlay').classList.remove('active');
         }
         function clearData() {
-            if(confirm("Reset all data?")) { localStorage.removeItem('hoursTrackerState_v17'); location.reload(); }
+            if(confirm("Reset all data?")) { localStorage.removeItem('hoursTrackerState_v18'); location.reload(); }
         }
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
