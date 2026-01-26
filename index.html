@@ -725,7 +725,7 @@
             sessions: [],
             isPunchedIn: false,
             currentStart: null,
-            hourlyWage: 25.00,
+            hourlyWage: 18.00,
             language: 'en'
         };
 
@@ -747,7 +747,7 @@
         };
 
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_stable');
+            const saved = localStorage.getItem('hoursTrackerState_stable_v2');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -763,7 +763,7 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_stable', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_stable_v2', JSON.stringify(state));
             renderUI();
         }
 
@@ -872,7 +872,7 @@
             const wage = parseFloat(document.getElementById('wage-input').value);
             if(wage >= 0) { 
                 state.hourlyWage = wage; 
-                localStorage.setItem('hoursTrackerState_stable', JSON.stringify(state));
+                localStorage.setItem('hoursTrackerState_stable_v2', JSON.stringify(state));
                 document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage);
                 renderWeeks();
             }
@@ -1058,7 +1058,7 @@
             document.getElementById('overlay').classList.remove('active');
         }
         function clearData() {
-            if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable'); location.reload(); }
+            if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable_v2'); location.reload(); }
         }
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
