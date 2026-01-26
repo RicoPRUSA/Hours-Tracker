@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- 
-       GLASSY APP ICON (Generated SVG) 
-       This creates a shiny icon with the app's background color (#F5F0EB) 
-       and the Teal Accent (#007696).
-    -->
+    <!-- GLASSY APP ICON -->
     <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9Imdsb3NzIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIi8+PHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0icmdiYSgyNTUsMjU1LDI1NSwwKSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTIwIiBmaWxsPSIjRjVGMEVCIi8+PHBhdGggZD0iTTI1NiAxMDBMNTAgMjUwbDIwNiAxNTAgMjA2LTE1MHoiIGZpbGw9IiMwMDc2OTYiLz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyMCIgZmlsbD0idXJsKCNnbG9zcykiLz48L3N2Zz4=">
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9Imdsb3NzIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIi8+PHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0icmdiYSgyNTUsMjU1LDI1NSwwKSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTIwIiBmaWxsPSIjRjVGMEVCIi8+PHBhdGggZD0iTTI1NiAxMDBMNTAgMjUwbDIwNiAxNTAgMjA2LTE1MHoiIGZpbGw9IiMwMDc2OTYiLz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyMCIgZmlsbD0idXJsKCNnbG9zcykiLz48L3N2Zz4=">
     
@@ -68,7 +64,6 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            /* Flex center properly */
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
@@ -100,7 +95,7 @@
             padding: 4px 8px;
             border-radius: 6px;
             cursor: pointer;
-            z-index: 101; /* Ensure it's clickable */
+            z-index: 101; 
         }
 
         @media (max-width: 480px) {
@@ -177,22 +172,21 @@
         }
         .overlay.active { display: block; }
 
-        /* --- PUNCH SECTION (COMPACT & SHRINKABLE) --- */
+        /* --- PUNCH SECTION --- */
         .punch-section {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 25px 20px;
+            padding: 25px 20px; 
             background: var(--control-bg);
             box-shadow: 0 4px 20px rgba(139, 119, 101, 0.1);
             border-bottom: 1px solid var(--border);
             position: relative;
             z-index: 10; 
-            transition: all 0.3s ease; /* For smooth shrinking */
+            transition: all 0.3s ease; 
         }
 
-        /* SHRUNK STATE FOR SCROLLING */
         .punch-section.shrunk {
             padding: 10px 20px;
             flex-direction: row;
@@ -202,7 +196,7 @@
 
         .live-timer {
             font-size: 56px;
-            font-weight: 300;
+            font-weight: 300; 
             font-variant-numeric: tabular-nums;
             margin-bottom: 20px;
             color: var(--text-main);
@@ -211,17 +205,21 @@
             transition: all 0.3s ease;
         }
 
-        /* SHRUNK TIMER */
         .punch-section.shrunk .live-timer {
             font-size: 28px;
             margin-bottom: 0;
             font-weight: 600;
         }
 
+        @media (max-width: 400px) {
+            .live-timer { font-size: 42px; margin-bottom: 15px; }
+            .punch-section { padding: 20px 15px; }
+        }
+
         .punch-btn {
             width: 100%;
             max-width: 300px;
-            height: 65px;
+            height: 65px; 
             border-radius: 8px;
             border: none;
             color: white;
@@ -237,14 +235,12 @@
             overflow: hidden;
         }
 
-        /* SHRUNK BUTTON */
         .punch-section.shrunk .punch-btn {
             height: 40px;
             max-width: 160px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* Hide icon and subtext when shrunk to save space */
         .punch-section.shrunk .btn-icon,
         .punch-section.shrunk .btn-sub-text {
             display: none;
@@ -266,29 +262,24 @@
 
         /* --- CARDS CONTAINER --- */
         .scroll-container {
-            padding: 10px 0; /* Minimized padding */
+            padding: 20px;
             flex: 1;
             overflow-y: auto;
         }
 
         .main-card {
             background: var(--card-bg);
-            border-radius: 0; /* Full width look on mobile */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(139, 119, 101, 0.08); 
             overflow: hidden;
-            border-top: 1px solid #fff; 
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 15px;
-        }
-        
-        @media(min-width: 600px) {
-            .main-card { border-radius: 12px; margin: 0 15px 25px 15px; }
+            border: 1px solid #fff; 
+            margin-bottom: 25px;
         }
 
         /* --- CARD HEADER --- */
         .card-header {
             background: var(--header-gradient);
-            padding: 12px 15px;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -325,23 +316,19 @@
             align-items: flex-end; 
         }
 
-        /* Swapped Colors & Positions */
         .total-hrs-sub { 
-            color: var(--accent-neon); /* Neon Green */
-            font-size: 19px;
-            font-weight: 700;
-            text-shadow: 0 0 10px rgba(0,0,0,0.2);
-            line-height: 1;
+            font-size: 13px; 
+            color: rgba(255,255,255,0.9); 
+            font-weight: 500; 
             margin-bottom: 2px;
         }
 
         .total-pay-badge {
-            font-size: 13px; 
-            color: rgba(255,255,255,0.9); 
-            font-weight: 500; 
-            background: none;
-            border: none;
-            padding: 0;
+            color: var(--accent-neon);
+            font-size: 19px;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(0,0,0,0.2);
+            line-height: 1;
         }
         
         .header-delete-btn {
@@ -397,7 +384,29 @@
         /* ================= MOBILE OPTIMIZATIONS ================= */
         @media (max-width: 480px) {
             
-            /* Card Header Stacking & Centering */
+            .header-center {
+                flex-direction: column; 
+                gap: 4px; 
+            }
+            .app-logo {
+                height: 36px; 
+                max-width: 160px;
+            }
+            .app-title {
+                font-size: 11px; 
+                padding-left: 0;
+                border-left: none; 
+                color: var(--text-sec); 
+                font-weight: 800;
+            }
+
+            .scroll-container {
+                padding: 15px 8px; 
+            }
+            .main-card {
+                border-radius: 8px;
+            }
+
             .card-header {
                 flex-direction: column;
                 align-items: center;
@@ -421,7 +430,7 @@
             }
             
             .stats-group {
-                flex-direction: row-reverse; /* Swap Salary/Hours Position */
+                flex-direction: row-reverse; 
                 gap: 15px;
                 align-items: baseline;
                 justify-content: center;
@@ -434,10 +443,9 @@
                 transform: translateY(-50%);
             }
 
-            .total-pay-badge { font-size: 14px; color:rgba(255,255,255,0.8); }
-            .total-hrs-sub { font-size: 20px; color: var(--accent-neon); }
+            .total-pay-badge { margin-bottom: 0; font-size: 20px; }
+            .total-hrs-sub { font-size: 14px; }
 
-            /* CENTERED List Items + Inline Edit Button */
             .day-row {
                 flex-direction: column;
                 align-items: center; 
@@ -489,12 +497,11 @@
             }
         }
 
-        /* --- FOOTER COMPACT --- */
         .rate-display {
             text-align: center; 
             color: var(--text-sec); 
-            font-size: 11px; /* Smaller */
-            padding-bottom: 10px; /* Reduced padding */
+            font-size: 11px; 
+            padding-bottom: 10px; 
             font-weight: 500;
         }
 
@@ -518,12 +525,11 @@
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; color: var(--text-sec); font-size: 12px; font-weight: 700; text-transform: uppercase; }
         
-        /* NUMBER INPUT FIX */
         .form-group input { 
             width: 100%; padding: 14px; 
             background: #F8F9FA;
             border: 2px solid #E1E8ED; border-radius: 8px; 
-            font-size: 24px; /* Larger font for easy typing */
+            font-size: 24px; 
             box-sizing: border-box; 
             color: var(--text-main);
             outline: none;
@@ -548,10 +554,8 @@
 </head>
 <body>
 
-    <!-- OVERLAY -->
     <div class="overlay" id="overlay" onclick="closeAll()"></div>
 
-    <!-- SIDEBAR MENU -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header" data-i18n="menu_title">Hours Tracker</div>
         <div class="sidebar-item" onclick="openModal('modal-add')">
@@ -568,7 +572,6 @@
         </div>
     </div>
 
-    <!-- HEADER with Logo -->
     <div class="top-bar">
         <button class="menu-btn" onclick="toggleMenu()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -579,11 +582,9 @@
             <div class="app-title" data-i18n="app_title">HOURS TRACKER</div>
         </div>
         
-        <!-- LANGUAGE TOGGLE -->
         <button class="lang-toggle" id="lang-btn" onclick="toggleLanguage()">ES</button>
     </div>
 
-    <!-- PUNCH CLOCK -->
     <div class="punch-section">
         <div class="live-timer" id="main-timer">00:00:00</div>
         
@@ -596,10 +597,8 @@
         </button>
     </div>
 
-    <!-- SCROLL AREA FOR CARDS -->
     <div class="scroll-container" id="cards-container">
-        <!-- Javascript will inject cards here -->
-        <div style="height: 20px;"></div> <!-- Spacer -->
+        <div style="height: 20px;"></div>
     </div>
     
     <div class="rate-display">
@@ -607,12 +606,10 @@
          <span id="display-rate" style="font-weight:800; color: var(--text-main); font-size:12px;">$0.00</span>
     </div>
 
-    <!-- MODAL: SETTINGS -->
     <div class="modal" id="modal-settings">
         <h2 data-i18n="settings_title">Job Settings</h2>
         <div class="form-group">
             <label data-i18n="settings_wage">Hourly Wage ($)</label>
-            <!-- NUMBER PAD INPUT -->
             <input type="number" inputmode="decimal" id="wage-input" placeholder="0.00" onchange="saveSettings()" onkeyup="saveSettings()">
         </div>
         <div class="modal-buttons">
@@ -620,7 +617,6 @@
         </div>
     </div>
 
-    <!-- MODAL: ADD ENTRY -->
     <div class="modal" id="modal-add">
         <h2 data-i18n="add_title">Manual Log</h2>
         <div class="form-group">
@@ -637,7 +633,6 @@
         </div>
     </div>
 
-    <!-- MODAL: EDIT ENTRY -->
     <div class="modal" id="modal-edit">
         <h2 data-i18n="edit_title">Edit Shift</h2>
         <input type="hidden" id="edit-id">
@@ -657,7 +652,6 @@
     </div>
 
     <script>
-        // --- TRANSLATIONS ---
         const translations = {
             en: {
                 app_title: "HOURS TRACKER",
@@ -729,7 +723,6 @@
             }
         };
 
-        // --- DATA MODEL ---
         let state = {
             sessions: [],
             isPunchedIn: false,
@@ -743,7 +736,6 @@
             renderUI();
             setInterval(tick, 1000);
             
-            // Scroll Listener for shrinking header
             const scrollContainer = document.getElementById('cards-container');
             const punchSection = document.querySelector('.punch-section');
             
@@ -756,9 +748,8 @@
             });
         };
 
-        // --- STORAGE ---
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_v19');
+            const saved = localStorage.getItem('hoursTrackerState_v20');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -767,39 +758,32 @@
                     s.startTime = new Date(s.startTime);
                     s.endTime = new Date(s.endTime);
                 });
-                // Ensure wage is loaded
                 document.getElementById('wage-input').value = state.hourlyWage;
             }
-            // Set initial language button text
             document.getElementById('lang-btn').innerText = state.language === 'en' ? 'ES' : 'EN';
         }
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_v19', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_v20', JSON.stringify(state));
             renderUI();
         }
 
-        // --- LANGUAGE ---
         function toggleLanguage() {
             state.language = state.language === 'en' ? 'es' : 'en';
             document.getElementById('lang-btn').innerText = state.language === 'en' ? 'ES' : 'EN';
-            saveData(); // Save language preference
+            saveData();
         }
 
-        function t(key) {
-            return translations[state.language][key] || key;
-        }
+        function t(key) { return translations[state.language][key] || key; }
 
         function updateText() {
-            // Update all elements with data-i18n attribute
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                el.innerHTML = t(key); // Use innerHTML to allow tags like <br> in empty state
+                el.innerHTML = t(key);
             });
         }
 
-        // --- ACTIONS ---
         function togglePunch() {
             if (state.isPunchedIn) {
                 const end = new Date();
@@ -827,7 +811,6 @@
             }
         }
 
-        // --- WEEK DELETION ---
         function deleteWeek(sundayTimestamp) {
             if(confirm(t('confirm_delete_week'))) {
                 state.sessions = state.sessions.filter(s => {
@@ -840,7 +823,6 @@
             }
         }
 
-        // --- MANUAL / EDIT ---
         function addManualEntry() {
             const startStr = document.getElementById('add-start').value;
             const endStr = document.getElementById('add-end').value;
@@ -889,21 +871,17 @@
         }
 
         function saveSettings() {
-            // Auto save on input change
             const wage = parseFloat(document.getElementById('wage-input').value);
             if(wage >= 0) { 
                 state.hourlyWage = wage; 
-                localStorage.setItem('hoursTrackerState_v19', JSON.stringify(state)); // Silent save without full re-render
+                localStorage.setItem('hoursTrackerState_v20', JSON.stringify(state));
                 document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage);
-                // Also update header totals immediately
                 renderWeeks();
             }
         }
 
-        // --- MAIN UI RENDER ---
         function renderUI() {
-            updateText(); // Apply Translations
-
+            updateText(); 
             const btn = document.getElementById('punch-btn');
             const btnTxt = document.getElementById('btn-text');
             const btnSub = document.getElementById('btn-sub');
@@ -928,7 +906,6 @@
             renderWeeks();
         }
 
-        // --- WEEKLY GROUPING LOGIC ---
         function renderWeeks() {
             const container = document.getElementById('cards-container');
             container.innerHTML = "<div style='height:10px'></div>";
@@ -1021,8 +998,8 @@
                             </div>
                             <div class="header-right">
                                 <div class="stats-group">
-                                    <div class="total-hrs-sub">${formatMoney(calcEarn(group.totalDuration))}</div>
-                                    <div class="total-pay-badge">${formatDuration(group.totalDuration)}</div>
+                                    <div class="total-pay-badge">${formatMoney(calcEarn(group.totalDuration))}</div>
+                                    <div class="total-hrs-sub">${formatDuration(group.totalDuration)}</div>
                                 </div>
                                 <button class="header-delete-btn" onclick="deleteWeek(${key})" title="Delete Week">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
@@ -1038,7 +1015,6 @@
             });
         }
 
-        // --- UTILS ---
         function formatShortDate(d) { return d.toLocaleDateString(state.language === 'es' ? 'es-ES' : 'en-US', { month: 'short', day: 'numeric' }); }
         function formatDuration(ms) {
             const h = Math.floor(ms / 3600000);
@@ -1053,7 +1029,15 @@
             return `${pad(h)}:${pad(m)}:${pad(s)}`;
         }
         function pad(n) { return n < 10 ? '0'+n : n; }
-        function formatMoney(n) { return new Intl.NumberFormat(state.language === 'es' ? 'es-ES' : 'en-US', { style: 'currency', currency: 'USD' }).format(n); }
+        
+        function formatMoney(n) { 
+            // Always force US formatting for dots/commas
+            return new Intl.NumberFormat('en-US', { 
+                style: 'currency', 
+                currency: 'USD' 
+            }).format(n); 
+        }
+        
         function calcEarn(ms) { return (ms / 3600000) * state.hourlyWage; }
         function formatTime(d) { return d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}); }
         function toLocalISO(date) {
@@ -1062,7 +1046,6 @@
             return local.toISOString().slice(0, 16);
         }
 
-        // --- UI TOGGLES ---
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('open');
             document.getElementById('overlay').classList.toggle('active');
@@ -1078,7 +1061,7 @@
             document.getElementById('overlay').classList.remove('active');
         }
         function clearData() {
-            if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_v19'); location.reload(); }
+            if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_v20'); location.reload(); }
         }
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
