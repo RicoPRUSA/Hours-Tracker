@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- GLASSY APP ICON -->
-    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9Imdsb3NzIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIi8+PHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0icmdiYSgyNTUsMjU1LDI1NSwwKSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTIwIiBmaWxsPSIjRjVGMEVCIi8+PHBhdGggZD0iTTI1NiAxMDBMNTAgMjUwbDIwNiAxNTAgMjA2LTE1MHoiIGZpbGw9IiMwMDc2OTYiLz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyMCIgZmlsbD0idXJsKCNnbG9zcykiLz48L3N2Zz4=">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9Imdsb3NzIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgyNTUsMjU1LDI1NSwwLjgpIi8+PHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0icmdiYSgyNTUsMjU1LDI1NSwwKSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTIwIiBmaWxsPSIjRjVGMEVCIi8+PHBhdGggZD0iTTI1NiAxMDBMNTAgMjUwbDIwNiAxNTAgMjA2LTE1MHoiIGZpbGw9IiMwMDc2OTYiLz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyMCIgZmlsbD0idXJsKCNnbG9zcykiLz48L3N2Zz4=">
+    <!-- 
+        APP ICONS 
+        Using your direct GitHub link creates a reliable icon on iOS Home Screens.
+        (Code-generated icons often fail on iOS, defaulting to a letter).
+    -->
+    <link rel="icon" href="https://github.com/RicoPRUSA/Hours-Tracker/blob/main/TU%20LOGO.PNG?raw=true">
+    <link rel="apple-touch-icon" href="https://github.com/RicoPRUSA/Hours-Tracker/blob/main/TU%20LOGO.PNG?raw=true">
     
     <title>Hours Tracker</title>
     <style>
@@ -18,7 +22,7 @@
             
             --text-main: #2C3E50;      
             --text-sec: #7F8C8D;       
-            --border: #C0C0C0; /* Darker border for list items */       
+            --border: #C0C0C0;         
             
             /* Accents */
             --accent-teal: #007696;    
@@ -351,7 +355,7 @@
 
         .day-row {
             padding: 16px 20px;
-            border-bottom: 1px solid var(--border); /* Darker border here */
+            border-bottom: 1px solid var(--border); 
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -405,7 +409,6 @@
             }
             .main-card {
                 border-radius: 8px;
-                /* Tighter card spacing on mobile */
                 margin-bottom: 12px; 
             }
 
@@ -448,27 +451,34 @@
             .total-pay-badge { margin-bottom: 0; font-size: 20px; }
             .total-hrs-sub { font-size: 14px; }
 
-            /* COMPACT LIST ITEMS */
+            /* --- COMPACT & INLINE LIST ITEMS --- */
             .day-row {
                 flex-direction: column;
                 align-items: center; 
-                /* Tighter padding on mobile */
-                padding: 10px 12px; 
+                padding: 8px 10px; /* Reduced vertical padding */
             }
 
             .day-info {
                 width: 100%;
-                /* Tighter spacing between date and time */
-                margin-bottom: 4px; 
+                margin-bottom: 4px;
                 display: flex;
-                flex-direction: column;
+                flex-direction: row; /* FORCE INLINE */
                 align-items: center; 
                 justify-content: center;
-                text-align: center;
+                gap: 5px; /* Small gap between Date and Time */
+                flex-wrap: wrap; 
             }
             
-            .day-name { margin-bottom: 2px; font-size: 16px; }
-            .day-time-range { font-size: 14px; color: #7F8C8D; }
+            .day-name { margin-bottom: 0; font-size: 15px; }
+            
+            /* Add separator dot on mobile */
+            .day-name::after {
+                content: "•";
+                color: #ccc;
+                margin-left: 5px;
+            }
+
+            .day-time-range { font-size: 13px; color: #7F8C8D; }
 
             .day-stats {
                 width: 100%;
@@ -494,10 +504,10 @@
             .edit-btn {
                 position: absolute;
                 top: auto;
-                bottom: 10px; /* Adjusted for tighter padding */
+                bottom: 8px; /* Tighter to bottom */
                 right: 15px;
                 transform: none;
-                width: 32px; height: 32px;
+                width: 30px; height: 30px; /* Slightly smaller button */
                 border: 1px solid #eee;
             }
         }
@@ -754,7 +764,7 @@
         };
 
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_v21');
+            const saved = localStorage.getItem('hoursTrackerState_v22');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -770,7 +780,7 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_v21', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_v22', JSON.stringify(state));
             renderUI();
         }
 
@@ -879,7 +889,7 @@
             const wage = parseFloat(document.getElementById('wage-input').value);
             if(wage >= 0) { 
                 state.hourlyWage = wage; 
-                localStorage.setItem('hoursTrackerState_v21', JSON.stringify(state));
+                localStorage.setItem('hoursTrackerState_v22', JSON.stringify(state));
                 document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage);
                 renderWeeks();
             }
@@ -1036,7 +1046,6 @@
         function pad(n) { return n < 10 ? '0'+n : n; }
         
         function formatMoney(n) { 
-            // Always force US formatting for dots/commas
             return new Intl.NumberFormat('en-US', { 
                 style: 'currency', 
                 currency: 'USD' 
@@ -1066,7 +1075,7 @@
             document.getElementById('overlay').classList.remove('active');
         }
         function clearData() {
-            if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_v21'); location.reload(); }
+            if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_v22'); location.reload(); }
         }
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
