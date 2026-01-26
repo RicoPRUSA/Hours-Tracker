@@ -18,7 +18,7 @@
             
             --text-main: #2C3E50;      
             --text-sec: #7F8C8D;       
-            --border: #D6D2CE;         
+            --border: #C0C0C0; /* Darker border for list items */       
             
             /* Accents */
             --accent-teal: #007696;    
@@ -351,7 +351,7 @@
 
         .day-row {
             padding: 16px 20px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid var(--border); /* Darker border here */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -405,6 +405,8 @@
             }
             .main-card {
                 border-radius: 8px;
+                /* Tighter card spacing on mobile */
+                margin-bottom: 12px; 
             }
 
             .card-header {
@@ -446,15 +448,18 @@
             .total-pay-badge { margin-bottom: 0; font-size: 20px; }
             .total-hrs-sub { font-size: 14px; }
 
+            /* COMPACT LIST ITEMS */
             .day-row {
                 flex-direction: column;
                 align-items: center; 
-                padding: 12px 15px 15px 15px;
+                /* Tighter padding on mobile */
+                padding: 10px 12px; 
             }
 
             .day-info {
                 width: 100%;
-                margin-bottom: 8px;
+                /* Tighter spacing between date and time */
+                margin-bottom: 4px; 
                 display: flex;
                 flex-direction: column;
                 align-items: center; 
@@ -489,7 +494,7 @@
             .edit-btn {
                 position: absolute;
                 top: auto;
-                bottom: 12px;
+                bottom: 10px; /* Adjusted for tighter padding */
                 right: 15px;
                 transform: none;
                 width: 32px; height: 32px;
@@ -749,7 +754,7 @@
         };
 
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_v20');
+            const saved = localStorage.getItem('hoursTrackerState_v21');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -765,7 +770,7 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_v20', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_v21', JSON.stringify(state));
             renderUI();
         }
 
@@ -874,7 +879,7 @@
             const wage = parseFloat(document.getElementById('wage-input').value);
             if(wage >= 0) { 
                 state.hourlyWage = wage; 
-                localStorage.setItem('hoursTrackerState_v20', JSON.stringify(state));
+                localStorage.setItem('hoursTrackerState_v21', JSON.stringify(state));
                 document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage);
                 renderWeeks();
             }
@@ -998,8 +1003,8 @@
                             </div>
                             <div class="header-right">
                                 <div class="stats-group">
-                                    <div class="total-pay-badge">${formatMoney(calcEarn(group.totalDuration))}</div>
-                                    <div class="total-hrs-sub">${formatDuration(group.totalDuration)}</div>
+                                    <div class="total-hrs-sub">${formatMoney(calcEarn(group.totalDuration))}</div>
+                                    <div class="total-pay-badge">${formatDuration(group.totalDuration)}</div>
                                 </div>
                                 <button class="header-delete-btn" onclick="deleteWeek(${key})" title="Delete Week">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
@@ -1061,7 +1066,7 @@
             document.getElementById('overlay').classList.remove('active');
         }
         function clearData() {
-            if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_v20'); location.reload(); }
+            if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_v21'); location.reload(); }
         }
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
