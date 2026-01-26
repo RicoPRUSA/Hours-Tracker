@@ -42,6 +42,10 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        * {
+            box-sizing: border-box; /* Global box sizing fix */
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
@@ -69,6 +73,7 @@
             min-height: 55px; 
             position: sticky;
             top: 0;
+            padding-top: max(8px, env(safe-area-inset-top)); /* Notch support */
         }
 
         .header-center {
@@ -79,6 +84,8 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
+            /* Fix for centering absolute element with safe area */
+            margin-top: max(0px, env(safe-area-inset-top) / 2); 
         }
 
         .app-logo { height: 38px; width: auto; object-fit: contain; }
@@ -121,7 +128,8 @@
         .sidebar {
             position: fixed; top: 0; left: -280px; width: 260px; height: 100%;
             background: #FFFFFF; box-shadow: 4px 0 20px rgba(0,0,0,0.1);
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; padding-top: 20px;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; 
+            padding-top: max(20px, env(safe-area-inset-top));
         }
         .sidebar.open { left: 0; }
         .sidebar-header {
@@ -197,7 +205,7 @@
 
         /* --- CARDS CONTAINER --- */
         .scroll-container {
-            padding: 20px; flex: 1; overflow-y: auto; padding-bottom: 70px; /* Space for undo bar */
+            padding: 20px; flex: 1; overflow-y: auto; padding-bottom: 80px; /* Space for undo bar */
         }
 
         .main-card {
@@ -258,7 +266,6 @@
             border-bottom: 1px solid var(--border);
         }
 
-        /* The Red Background Layer */
         .day-row-bg {
             position: absolute; top: 0; bottom: 0; left: 0; right: 0;
             background: var(--danger);
@@ -268,14 +275,13 @@
             z-index: 1;
         }
 
-        /* The Front Content Layer */
         .day-row {
             position: relative; z-index: 2;
             background: var(--card-bg);
             padding: 16px 20px; 
             display: flex; justify-content: space-between; align-items: center;
-            transition: transform 0.2s ease-out; /* Smooth snap back */
-            touch-action: pan-y; /* Allow vertical scroll, handle horizontal in JS */
+            transition: transform 0.2s ease-out; 
+            touch-action: pan-y; 
         }
 
         .day-info { flex: 1; }
@@ -294,25 +300,46 @@
         }
         .edit-btn:active { background: #f0f9ff; }
 
-        /* UNDO FOOTER */
+        /* FIXED UNDO FOOTER */
         .undo-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: #333; color: white;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 20px;
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%;
+            background: #2b2b2b; /* Darker bg */
+            color: white;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 15px 20px;
+            /* SAFE AREA & BOX SIZING FIX */
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
+            box-sizing: border-box;
+            
             transform: translateY(100%);
-            transition: transform 0.3s ease;
-            z-index: 2000;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 5000; /* High Z-index */
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
         }
+        
         .undo-bar.active { transform: translateY(0); }
         .undo-actions { display: flex; gap: 15px; }
-        .undo-btn { background: none; border: 1px solid #666; color: white; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .undo-btn.green { border-color: var(--success); color: var(--success); }
+        
+        .undo-btn { 
+            background: rgba(255,255,255,0.1); 
+            border: 1px solid #666; 
+            color: white; 
+            padding: 8px 16px; 
+            border-radius: 6px; 
+            font-weight: 600; 
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .undo-btn.green { border-color: var(--success); color: var(--success); background: rgba(39, 174, 96, 0.1); }
 
         /* ================= MOBILE OPTIMIZATIONS ================= */
         @media (max-width: 480px) {
-            .scroll-container { padding: 15px 8px; }
+            .scroll-container { padding: 15px 8px; padding-bottom: 90px; }
             .main-card { border-radius: 8px; margin-bottom: 12px; }
 
             .header-content { flex-direction: column; align-items: center; gap: 10px; text-align: center; }
@@ -405,7 +432,7 @@
         <div style="height: 20px;"></div>
     </div>
 
-    <!-- UNDO BAR -->
+    <!-- FIXED UNDO BAR -->
     <div class="undo-bar" id="undo-bar">
         <span><span id="deleted-count">1</span> item deleted</span>
         <div class="undo-actions">
@@ -486,8 +513,6 @@
         };
 
         let state = { sessions: [], isPunchedIn: false, currentStart: null, hourlyWage: 18.00, language: 'en' };
-        
-        // UNDO STACKS
         let undoStack = [];
         let redoStack = [];
 
@@ -520,6 +545,20 @@
             renderUI();
         }
 
+        function tick() {
+            if (state.isPunchedIn && state.currentStart) {
+                const diff = new Date() - state.currentStart;
+                document.getElementById('main-timer').innerText = formatHMS(diff);
+                const liveEarnEl = document.getElementById('live-card-earn');
+                const liveDurEl = document.getElementById('live-card-dur');
+                if(liveEarnEl && liveDurEl) {
+                    const earnings = (diff / 3600000) * state.hourlyWage;
+                    liveEarnEl.innerText = formatMoney(earnings);
+                    liveDurEl.innerText = formatDuration(diff);
+                } 
+            }
+        }
+
         function toggleLanguage() {
             state.language = state.language === 'en' ? 'es' : 'en';
             document.getElementById('lang-btn').innerText = state.language === 'en' ? 'ES' : 'EN';
@@ -542,21 +581,6 @@
             saveData(); 
         }
 
-        function tick() {
-            if (state.isPunchedIn && state.currentStart) {
-                const diff = new Date() - state.currentStart;
-                document.getElementById('main-timer').innerText = formatHMS(diff);
-                const liveEarnEl = document.getElementById('live-card-earn');
-                const liveDurEl = document.getElementById('live-card-dur');
-                if(liveEarnEl && liveDurEl) {
-                    const earnings = (diff / 3600000) * state.hourlyWage;
-                    liveEarnEl.innerText = formatMoney(earnings);
-                    liveDurEl.innerText = formatDuration(diff);
-                } 
-            }
-        }
-
-        // --- UNDO/REDO LOGIC ---
         function updateUndoBar() {
             const bar = document.getElementById('undo-bar');
             const count = document.getElementById('deleted-count');
@@ -576,8 +600,8 @@
         function performUndo() {
             if(undoStack.length === 0) return;
             const item = undoStack.pop();
-            redoStack.push(item); // Add to redo
-            state.sessions.push(item); // Restore
+            redoStack.push(item); 
+            state.sessions.push(item); 
             saveData();
             updateUndoBar();
         }
@@ -585,20 +609,18 @@
         function performRedo() {
             if(redoStack.length === 0) return;
             const item = redoStack.pop();
-            // Delete it again, but push back to undo stack
             undoStack.push(item);
             state.sessions = state.sessions.filter(s => s.id !== item.id);
             saveData();
             updateUndoBar();
         }
 
-        // --- SWIPE DELETE LOGIC ---
         function deleteSessionById(id) {
             const index = state.sessions.findIndex(s => s.id === id);
             if(index > -1) {
                 const deletedItem = state.sessions[index];
-                undoStack.push(deletedItem); // Push to undo
-                redoStack = []; // Clear redo when new action taken
+                undoStack.push(deletedItem); 
+                redoStack = []; 
                 state.sessions.splice(index, 1);
                 saveData();
                 updateUndoBar();
@@ -606,10 +628,7 @@
             }
         }
 
-        // --- TOUCH HANDLERS FOR SWIPE ---
         let startX = 0;
-        let currentSwipedRow = null;
-
         function attachSwipeListeners() {
             const rows = document.querySelectorAll('.day-row');
             rows.forEach(row => {
@@ -621,9 +640,7 @@
                 row.addEventListener('touchmove', (e) => {
                     const currentX = e.touches[0].clientX;
                     const diff = currentX - startX;
-                    if(diff < 0) { // Only allow left swipe
-                        row.style.transform = `translateX(${diff}px)`;
-                    }
+                    if(diff < 0) { row.style.transform = `translateX(${diff}px)`; }
                 }, {passive: true});
 
                 row.addEventListener('touchend', (e) => {
@@ -631,10 +648,9 @@
                     const diff = endX - startX;
                     row.style.transition = 'transform 0.2s ease-out';
                     
-                    if(diff < -100) { // Threshold to delete
+                    if(diff < -100) { 
                         row.style.transform = `translateX(-100%)`;
                         const id = parseInt(row.getAttribute('data-id'));
-                        // Wait for animation then delete
                         setTimeout(() => deleteSessionById(id), 200);
                     } else {
                         row.style.transform = `translateX(0)`;
@@ -643,13 +659,8 @@
             });
         }
 
-        // ... [Standard functions: deleteWeek, addManualEntry, openEdit, saveEdit, deleteEntry, saveSettings, renderUI]
-        // These remain same as V5, just ensure renderWeeks calls attachSwipeListeners at end
-        
         function deleteWeek(sundayTimestamp) {
             if(confirm(t('confirm_delete_week'))) {
-                // For undoing a whole week, we'd need a more complex stack (array of items). 
-                // For now, week delete is permanent or requires simple confirm.
                 state.sessions = state.sessions.filter(s => {
                     const d = new Date(s.startTime); d.setHours(0,0,0,0); d.setDate(d.getDate() - d.getDay());
                     return d.getTime() !== sundayTimestamp;
@@ -684,7 +695,6 @@
         }
 
         function deleteEntry() {
-            // Manual delete from Edit Modal
             const id = parseInt(document.getElementById('edit-id').value);
             if(confirm(t('confirm_delete'))) { deleteSessionById(id); closeAll(); }
         }
@@ -746,7 +756,6 @@
 
                 group.sessions.forEach(s => {
                     const dateName = s.startTime.toLocaleDateString(state.language === 'es' ? 'es-ES' : 'en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-                    // WRAPPED ROW FOR SWIPE
                     rowsHTML += `<li class="day-row-wrapper">
                         <div class="day-row-bg">🗑</div>
                         <div class="day-row" data-id="${s.id}">
@@ -767,7 +776,6 @@
                 </div><ul class="day-list">${rowsHTML}</ul></div>`;
             });
             
-            // Attach swipe listeners to new elements
             attachSwipeListeners();
         }
 
