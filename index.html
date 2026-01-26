@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- 
-        APP ICONS 
-        Using your direct GitHub link creates a reliable icon on iOS Home Screens.
-        (Code-generated icons often fail on iOS, defaulting to a letter).
-    -->
+    <!-- GLASSY APP ICON -->
     <link rel="icon" href="https://github.com/RicoPRUSA/Hours-Tracker/blob/main/TU%20LOGO.PNG?raw=true">
     <link rel="apple-touch-icon" href="https://github.com/RicoPRUSA/Hours-Tracker/blob/main/TU%20LOGO.PNG?raw=true">
     
@@ -196,6 +192,21 @@
             flex-direction: row;
             justify-content: space-between;
             gap: 15px;
+        }
+
+        /* Rate Display inside Punch Section */
+        .rate-display {
+            text-align: center; 
+            color: var(--text-sec); 
+            font-size: 11px; 
+            font-weight: 500;
+            margin-bottom: 5px; /* Spacing above timer */
+            transition: all 0.3s ease;
+        }
+
+        /* Hide Rate when shrunk to save space */
+        .punch-section.shrunk .rate-display {
+            display: none;
         }
 
         .live-timer {
@@ -451,11 +462,11 @@
             .total-pay-badge { margin-bottom: 0; font-size: 20px; }
             .total-hrs-sub { font-size: 14px; }
 
-            /* --- COMPACT & INLINE LIST ITEMS --- */
+            /* COMPACT & INLINE LIST ITEMS */
             .day-row {
                 flex-direction: column;
                 align-items: center; 
-                padding: 8px 10px; /* Reduced vertical padding */
+                padding: 8px 10px; 
             }
 
             .day-info {
@@ -465,13 +476,12 @@
                 flex-direction: row; /* FORCE INLINE */
                 align-items: center; 
                 justify-content: center;
-                gap: 5px; /* Small gap between Date and Time */
+                gap: 5px; 
                 flex-wrap: wrap; 
             }
             
             .day-name { margin-bottom: 0; font-size: 15px; }
             
-            /* Add separator dot on mobile */
             .day-name::after {
                 content: "•";
                 color: #ccc;
@@ -504,20 +514,12 @@
             .edit-btn {
                 position: absolute;
                 top: auto;
-                bottom: 8px; /* Tighter to bottom */
+                bottom: 8px; 
                 right: 15px;
                 transform: none;
-                width: 30px; height: 30px; /* Slightly smaller button */
+                width: 30px; height: 30px; 
                 border: 1px solid #eee;
             }
-        }
-
-        .rate-display {
-            text-align: center; 
-            color: var(--text-sec); 
-            font-size: 11px; 
-            padding-bottom: 10px; 
-            font-weight: 500;
         }
 
         /* --- MODALS --- */
@@ -601,6 +603,12 @@
     </div>
 
     <div class="punch-section">
+        <!-- Rate Moved Here Above Timer -->
+        <div class="rate-display">
+             <span style="color:var(--text-sec); font-size:11px; font-weight:600; text-transform:uppercase;" data-i18n="footer_rate">Rate: </span>
+             <span id="display-rate" style="font-weight:800; color: var(--text-main); font-size:12px;">$0.00</span>
+        </div>
+
         <div class="live-timer" id="main-timer">00:00:00</div>
         
         <button id="punch-btn" class="punch-btn btn-in" onclick="togglePunch()">
@@ -614,11 +622,6 @@
 
     <div class="scroll-container" id="cards-container">
         <div style="height: 20px;"></div>
-    </div>
-    
-    <div class="rate-display">
-         <span style="color:var(--text-sec); font-size:11px; font-weight:600; text-transform:uppercase;" data-i18n="footer_rate">Rate: </span>
-         <span id="display-rate" style="font-weight:800; color: var(--text-main); font-size:12px;">$0.00</span>
     </div>
 
     <div class="modal" id="modal-settings">
@@ -764,7 +767,7 @@
         };
 
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_v22');
+            const saved = localStorage.getItem('hoursTrackerState_v23');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -780,7 +783,7 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_v22', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_v23', JSON.stringify(state));
             renderUI();
         }
 
@@ -889,7 +892,7 @@
             const wage = parseFloat(document.getElementById('wage-input').value);
             if(wage >= 0) { 
                 state.hourlyWage = wage; 
-                localStorage.setItem('hoursTrackerState_v22', JSON.stringify(state));
+                localStorage.setItem('hoursTrackerState_v23', JSON.stringify(state));
                 document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage);
                 renderWeeks();
             }
@@ -1075,7 +1078,7 @@
             document.getElementById('overlay').classList.remove('active');
         }
         function clearData() {
-            if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_v22'); location.reload(); }
+            if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_v23'); location.reload(); }
         }
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
