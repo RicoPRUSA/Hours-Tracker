@@ -13,9 +13,9 @@
     <style>
         :root {
             /* PALETTE */
-            --bg-color: #E0DBD5;       /* Darker Beige for better contrast */
+            --bg-color: #E0DBD5;       
             --card-bg: #FFFFFF;        
-            --control-bg: rgba(255, 255, 255, 0.85); /* Glassy White */
+            --control-bg: rgba(255, 255, 255, 0.85); 
             
             --text-main: #2C3E50;      
             --text-sec: #7F8C8D;       
@@ -25,8 +25,8 @@
             --accent-teal: #007696;    
             --accent-red: #D32F2F;     
             --accent-orange: #E67E22;
-            --accent-neon: #76c900;    /* Darker Neon Green for readability on white */
-            --accent-gold: #D4AF37;    /* Metallic Gold */
+            --accent-neon: #76c900;    
+            --accent-gold: #FFD700;    
             
             --success: #27AE60;        
             --danger: #C0392B;         
@@ -37,7 +37,6 @@
             --header-gradient: linear-gradient(135deg, #007696 0%, #00455c 100%);
         }
 
-        /* Slide Up Animation */
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -56,7 +55,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- HEADER (Glassy) --- */
+        /* --- HEADER --- */
         .top-bar {
             padding: 8px 15px;
             display: flex;
@@ -210,7 +209,14 @@
 
         .card-header {
             background: var(--header-gradient); padding: 15px 20px;
-            display: flex; justify-content: space-between; align-items: center; color: white;
+            display: flex; flex-direction: column; /* Force Stack for Progress Bar */
+            color: white;
+            position: relative;
+        }
+        
+        .header-content {
+            display: flex; justify-content: space-between; align-items: center; width: 100%;
+            margin-bottom: 10px; /* Space for progress bar */
         }
 
         .header-left { display: flex; flex-direction: column; }
@@ -220,16 +226,32 @@
         .header-right { text-align: right; display: flex; align-items: center; gap: 15px; }
         .stats-group { display: flex; flex-direction: column; align-items: flex-end; }
 
-        .total-hrs-sub { 
-            font-size: 13px; color: rgba(255,255,255,0.9); font-weight: 500; margin-bottom: 2px; 
-        }
-        
-        /* Overtime Highlight */
+        .total-hrs-sub { font-size: 13px; color: rgba(255,255,255,0.9); font-weight: 500; margin-bottom: 2px; }
         .total-hrs-sub.overtime { color: var(--accent-gold); font-weight: 800; }
 
         .total-pay-badge {
             color: var(--accent-neon); font-size: 19px; font-weight: 700;
             text-shadow: 0 0 10px rgba(0,0,0,0.2); line-height: 1;
+        }
+        
+        /* PROGRESS BAR STYLES */
+        .week-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(0,0,0,0.2); /* Darker track */
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .week-progress-bar {
+            height: 100%;
+            background-color: var(--accent-neon); /* Green by default */
+            border-radius: 2px;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .week-progress-bar.overtime {
+            background-color: var(--accent-gold); /* Gold if > 40 */
         }
         
         .header-delete-btn {
@@ -270,9 +292,10 @@
             .scroll-container { padding: 15px 8px; }
             .main-card { border-radius: 8px; margin-bottom: 12px; }
 
-            .card-header {
-                flex-direction: column; align-items: center; gap: 10px; padding: 12px 15px; text-align: center;
+            .header-content {
+                flex-direction: column; align-items: center; gap: 10px; text-align: center;
             }
+            
             .header-left {
                 width: 100%; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 4px; align-items: center; 
             }
@@ -468,7 +491,7 @@
         };
 
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_stable_v4');
+            const saved = localStorage.getItem('hoursTrackerState_stable_v5');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -481,7 +504,7 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_stable_v4', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_stable_v5', JSON.stringify(state));
             renderUI();
         }
 
@@ -490,7 +513,7 @@
                 const diff = new Date() - state.currentStart;
                 document.getElementById('main-timer').innerText = formatHMS(diff);
                 
-                // Live Card Update Logic
+                // NO RENDERWEEKS() HERE - Stops bouncing
                 const liveEarnEl = document.getElementById('live-card-earn');
                 const liveDurEl = document.getElementById('live-card-dur');
                 
@@ -499,8 +522,7 @@
                     liveEarnEl.innerText = formatMoney(earnings);
                     liveDurEl.innerText = formatDuration(diff);
                 } 
-                // Note: We DO NOT call renderWeeks() here anymore to stop bouncing.
-                // The card is created ONCE when you click "Punch In".
+                // No else logic here - card is built on punch in
             }
         }
 
@@ -537,7 +559,8 @@
                 state.isPunchedIn = true;
                 if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
             }
-            saveData(); // This calls renderUI which calls renderWeeks(), building the card IMMEDIATELY.
+            // THIS CALL IS CRITICAL - It builds the card immediately when you punch
+            saveData(); 
         }
 
         function deleteWeek(sundayTimestamp) {
@@ -581,7 +604,7 @@
 
         function saveSettings() {
             const wage = parseFloat(document.getElementById('wage-input').value);
-            if(wage >= 0) { state.hourlyWage = wage; localStorage.setItem('hoursTrackerState_stable_v4', JSON.stringify(state)); document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage); renderWeeks(); }
+            if(wage >= 0) { state.hourlyWage = wage; localStorage.setItem('hoursTrackerState_stable_v5', JSON.stringify(state)); document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage); renderWeeks(); }
         }
 
         function renderUI() {
@@ -608,7 +631,7 @@
                 grouped[sunday].sessions.push(s); grouped[sunday].totalDuration += s.duration;
             });
 
-            // THIS BLOCK CREATES THE LIVE CARD
+            // THIS IS THE FIX: ENSURE LIVE CARD DATA IS INCLUDED IN GROUPING
             if(state.isPunchedIn && state.currentStart) {
                 const sunday = getWeekStart(state.currentStart).getTime();
                 if(!grouped[sunday]) grouped[sunday] = { weekStart: new Date(sunday), sessions: [], totalDuration: 0 };
@@ -621,7 +644,12 @@
             sortedKeys.forEach(key => {
                 const group = grouped[key];
                 const endOfWeek = new Date(group.weekStart); endOfWeek.setDate(endOfWeek.getDate() + 6);
-                const isOvertime = (group.totalDuration / 3600000) > 40;
+                
+                // Progress Bar Logic
+                const totalHrs = group.totalDuration / 3600000;
+                const pct = Math.min((totalHrs/40)*100, 100);
+                const isOvertime = totalHrs > 40;
+
                 group.sessions.sort((a,b) => b.startTime - a.startTime);
 
                 let rowsHTML = "";
@@ -643,9 +671,12 @@
                 });
 
                 container.innerHTML += `<div class="main-card"><div class="card-header">
-                    <div class="header-left"><div class="header-label">${t('label_pay_period')}</div><div class="header-title">${formatShortDate(group.weekStart)} - ${formatShortDate(endOfWeek)}</div></div>
-                    <div class="header-right"><div class="stats-group"><div class="total-hrs-sub ${isOvertime?'overtime':''}">${formatMoney(calcEarn(group.totalDuration))}</div><div class="total-pay-badge">${formatDuration(group.totalDuration)}</div></div>
-                    <button class="header-delete-btn" onclick="deleteWeek(${key})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></div>
+                    <div class="header-content">
+                        <div class="header-left"><div class="header-label">${t('label_pay_period')}</div><div class="header-title">${formatShortDate(group.weekStart)} - ${formatShortDate(endOfWeek)}</div></div>
+                        <div class="header-right"><div class="stats-group"><div class="total-hrs-sub ${isOvertime?'overtime':''}">${formatMoney(calcEarn(group.totalDuration))}</div><div class="total-pay-badge">${formatDuration(group.totalDuration)}</div></div>
+                        <button class="header-delete-btn" onclick="deleteWeek(${key})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></div>
+                    </div>
+                    <div class="week-progress"><div class="week-progress-bar ${isOvertime?'overtime':''}" style="width: ${pct}%"></div></div>
                 </div><ul class="day-list">${rowsHTML}</ul></div>`;
             });
         }
@@ -662,7 +693,7 @@
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('active'); }
         function openModal(id) { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
         function closeAll() { document.getElementById('sidebar').classList.remove('open'); document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); document.getElementById('overlay').classList.remove('active'); }
-        function clearData() { if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable_v4'); location.reload(); } }
+        function clearData() { if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable_v5'); location.reload(); } }
         function exportData() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state)); const node = document.createElement('a'); node.setAttribute("href", dataStr); node.setAttribute("download", "floor_master_backup.json"); document.body.appendChild(node); node.click(); node.remove(); }
     </script>
 </body>
