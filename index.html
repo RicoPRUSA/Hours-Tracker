@@ -28,9 +28,6 @@
             --accent-neon: #76c900;    
             --accent-gold: #FFD700;    
             
-            --success: #27AE60;        
-            --danger: #C0392B;         
-            
             /* Gradients */
             --btn-in-gradient: linear-gradient(135deg, #007696 0%, #005a75 100%); 
             --btn-out-gradient: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%); 
@@ -145,10 +142,10 @@
         }
         .overlay.active { display: block; }
 
-        /* --- PUNCH SECTION --- */
+        /* --- PUNCH SECTION (COMPACT STYLE) --- */
         .punch-section {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px 20px 30px 20px; 
+            padding: 10px 20px 25px 20px; 
             background: var(--control-bg);
             box-shadow: 0 15px 30px -10px rgba(0, 118, 150, 0.15); 
             border-bottom: 1px solid rgba(0,0,0,0.05);
@@ -158,15 +155,16 @@
         }
 
         .punch-section.shrunk {
-            padding: 10px 20px; flex-direction: row; justify-content: space-between; gap: 15px;
+            padding: 5px 20px; flex-direction: row; justify-content: space-between; gap: 15px;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
+        /* Controls Row */
         .controls-row {
             display: flex; justify-content: space-between; align-items: center;
-            width: 100%; max-width: 320px; margin-bottom: 10px;
+            width: 100%; max-width: 320px; margin-bottom: 0; 
             transition: all 0.2s ease;
         }
         .punch-section.shrunk .controls-row { display: none; }
@@ -175,9 +173,9 @@
 
         .history-btn {
             background: white; border: 1px solid #E2E8F0; color: var(--text-main);
-            width: 40px; height: 40px; border-radius: 50%; 
+            width: 36px; height: 36px; border-radius: 50%; 
             cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 18px; opacity: 0.3; pointer-events: none;
+            font-size: 16px; opacity: 0.3; pointer-events: none;
             transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .history-btn.active { opacity: 1; pointer-events: auto; color: var(--accent-teal); border-color: var(--accent-teal); }
@@ -185,34 +183,33 @@
 
         .rate-display {
             text-align: right; background: rgba(0,0,0,0.03);
-            padding: 5px 12px; border-radius: 20px;
+            padding: 4px 10px; border-radius: 20px;
         }
-        .rate-label { display: block; font-size: 10px; color: var(--text-sec); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .rate-value { display: block; font-size: 14px; font-weight: 800; color: var(--text-main); }
+        .rate-label { display: block; font-size: 9px; color: var(--text-sec); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .rate-value { display: block; font-size: 13px; font-weight: 800; color: var(--text-main); }
 
-        /* SMALLER TIMER FONT */
+        /* ULTRA THIN TIMER */
         .live-timer {
-            font-size: 42px; /* Much smaller than 64px */
-            font-weight: 700; 
+            font-size: 70px; 
+            font-weight: 200; /* Ultra Thin */
             font-variant-numeric: tabular-nums;
-            margin-bottom: 15px; 
-            color: var(--accent-teal);
+            margin-bottom: 10px; margin-top: 0;
+            line-height: 1; color: var(--accent-teal);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            letter-spacing: -1px;
-            text-shadow: 0 2px 10px rgba(0, 118, 150, 0.1);
-            transition: all 0.3s ease;
+            letter-spacing: -2px; transition: all 0.3s ease;
         }
         .punch-section.shrunk .live-timer {
-            font-size: 24px; margin-bottom: 0; color: var(--text-main); text-shadow: none; font-weight: 600;
+            font-size: 28px; margin-bottom: 0; color: var(--text-main); font-weight: 400;
         }
 
+        /* PILL SHAPED BUTTON - LIGHTER FONT */
         .punch-btn {
-            width: 100%; max-width: 280px; height: 70px; 
+            width: 100%; max-width: 280px; height: 60px; 
             border-radius: 50px; border: none; color: white; cursor: pointer;
-            box-shadow: 0 10px 25px -5px rgba(0, 118, 150, 0.4); 
+            box-shadow: 0 8px 20px -5px rgba(0, 118, 150, 0.4); 
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: flex; flex-direction: row; align-items: center; justify-content: center;
-            gap: 15px; position: relative; overflow: hidden;
+            gap: 12px; position: relative; overflow: hidden;
         }
         
         .punch-section.shrunk .punch-btn {
@@ -220,20 +217,33 @@
         }
         .punch-section.shrunk .btn-icon,
         .punch-section.shrunk .btn-sub-text { display: none; }
-        .punch-section.shrunk .btn-main-text { font-size: 14px; }
+        .punch-section.shrunk .btn-main-text { font-size: 14px; font-weight: 400; }
 
         .punch-btn:active { transform: scale(0.96); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         .btn-in { background: var(--btn-in-gradient); }
-        .btn-out { background: var(--btn-out-gradient); box-shadow: 0 10px 25px -5px rgba(211, 47, 47, 0.4); }
+        .btn-out { background: var(--btn-out-gradient); box-shadow: 0 8px 20px -5px rgba(211, 47, 47, 0.4); }
 
         .btn-label-group { display: flex; flex-direction: column; align-items: flex-start; }
-        .btn-main-text { font-size: 22px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
-        .btn-sub-text { font-size: 12px; opacity: 0.9; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-icon { font-size: 28px; }
+        
+        /* UPDATED BUTTON FONTS: MATCHING TIMER STYLE */
+        .btn-main-text { 
+            font-size: 22px; 
+            font-weight: 300; /* Light Weight */
+            letter-spacing: 1px; 
+            text-transform: uppercase; 
+        }
+        .btn-sub-text { 
+            font-size: 11px; 
+            opacity: 0.9; 
+            font-weight: 200; /* Ultra Light */
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+        }
+        .btn-icon { font-size: 26px; font-weight: 300; }
 
         @media (max-width: 400px) {
-            .live-timer { font-size: 36px; margin-bottom: 15px; } /* Even smaller on tiny phones */
-            .punch-section { padding: 20px 15px 25px 15px; }
+            .live-timer { font-size: 56px; margin-bottom: 10px; }
+            .punch-section { padding: 10px 15px 20px 15px; }
         }
 
         /* --- CARDS CONTAINER --- */
@@ -542,7 +552,7 @@
         };
 
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_stable_v10');
+            const saved = localStorage.getItem('hoursTrackerState_stable_v11');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -555,7 +565,7 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_stable_v10', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_stable_v11', JSON.stringify(state));
             renderUI();
             updateHistoryButtons();
         }
@@ -717,7 +727,7 @@
 
         function saveSettings() {
             const wage = parseFloat(document.getElementById('wage-input').value);
-            if(wage >= 0) { state.hourlyWage = wage; localStorage.setItem('hoursTrackerState_stable_v10', JSON.stringify(state)); document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage); renderWeeks(); }
+            if(wage >= 0) { state.hourlyWage = wage; localStorage.setItem('hoursTrackerState_stable_v11', JSON.stringify(state)); document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage); renderWeeks(); }
         }
 
         function renderUI() {
@@ -807,7 +817,7 @@
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('active'); }
         function openModal(id) { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
         function closeAll() { document.getElementById('sidebar').classList.remove('open'); document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); document.getElementById('overlay').classList.remove('active'); }
-        function clearData() { if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable_v10'); location.reload(); } }
+        function clearData() { if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable_v11'); location.reload(); } }
         function exportData() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state)); const node = document.createElement('a'); node.setAttribute("href", dataStr); node.setAttribute("download", "floor_master_backup.json"); document.body.appendChild(node); node.click(); node.remove(); }
     </script>
 </body>
