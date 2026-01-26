@@ -15,7 +15,7 @@
             /* PALETTE */
             --bg-color: #E0DBD5;       
             --card-bg: #FFFFFF;        
-            --control-bg: rgba(255, 255, 255, 0.85); 
+            --control-bg: rgba(255, 255, 255, 0.90); 
             
             --text-main: #2C3E50;      
             --text-sec: #7F8C8D;       
@@ -41,9 +41,12 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        * {
-            box-sizing: border-box; /* Global box sizing fix */
+        
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translate(-50%, 20px); }
+            20% { opacity: 1; transform: translate(-50%, 0); }
+            80% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -20px); }
         }
 
         body {
@@ -73,30 +76,56 @@
             min-height: 55px; 
             position: sticky;
             top: 0;
-            padding-top: max(8px, env(safe-area-inset-top)); /* Notch support */
         }
 
+        /* LEFT SIDE: Menu + Undo/Redo */
+        .header-left-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* UNDO/REDO BUTTONS */
+        .history-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-main);
+            padding: 0;
+            opacity: 0.3; /* Default disabled look */
+            pointer-events: none;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        
+        .history-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+            color: var(--accent-teal);
+        }
+        
+        .history-btn:active { transform: scale(0.9); }
+
+        /* CENTER LOGO */
         .header-center {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 8px;
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            /* Fix for centering absolute element with safe area */
-            margin-top: max(0px, env(safe-area-inset-top) / 2); 
         }
 
-        .app-logo { height: 38px; width: auto; object-fit: contain; }
+        .app-logo { height: 32px; width: auto; object-fit: contain; }
 
         .app-title {
             font-weight: 900;
-            font-size: 15px;
+            font-size: 14px;
             color: var(--text-main);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding-left: 12px;
+            padding-left: 8px;
             border-left: 2px solid #999;
             line-height: 1;
         }
@@ -114,22 +143,21 @@
         }
 
         @media (max-width: 480px) {
-            .header-center { flex-direction: column; gap: 2px; }
-            .app-logo { height: 32px; max-width: 160px; }
-            .app-title { font-size: 10px; padding-left: 0; border-left: none; color: var(--text-sec); font-weight: 800; }
+            .header-center { flex-direction: row; gap: 5px; } /* Keep inline on mobile */
+            .app-logo { height: 28px; }
+            .app-title { display: none; } /* Hide text on small screens to fit buttons */
         }
 
         .menu-btn {
             font-size: 24px; background: none; border: none; cursor: pointer;
-            padding: 5px; color: var(--text-main); display: flex; align-items: center; min-width: 40px; 
+            padding: 0; color: var(--text-main); display: flex; align-items: center; 
         }
 
         /* --- SIDEBAR MENU --- */
         .sidebar {
             position: fixed; top: 0; left: -280px; width: 260px; height: 100%;
             background: #FFFFFF; box-shadow: 4px 0 20px rgba(0,0,0,0.1);
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; 
-            padding-top: max(20px, env(safe-area-inset-top));
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; padding-top: 20px;
         }
         .sidebar.open { left: 0; }
         .sidebar-header {
@@ -205,7 +233,7 @@
 
         /* --- CARDS CONTAINER --- */
         .scroll-container {
-            padding: 20px; flex: 1; overflow-y: auto; padding-bottom: 80px; /* Space for undo bar */
+            padding: 20px; flex: 1; overflow-y: auto; 
         }
 
         .main-card {
@@ -257,7 +285,7 @@
         }
         .header-delete-btn:active { background: rgba(255,59,48,0.8); }
 
-        /* LIST ITEM STYLES (SWIPE READY) */
+        /* LIST ITEM STYLES */
         .day-list { list-style: none; padding: 0; margin: 0; overflow: hidden; }
 
         .day-row-wrapper {
@@ -300,46 +328,23 @@
         }
         .edit-btn:active { background: #f0f9ff; }
 
-        /* FIXED UNDO FOOTER */
-        .undo-bar {
-            position: fixed; 
-            bottom: 0; 
-            left: 0; 
-            width: 100%;
-            background: #2b2b2b; /* Darker bg */
-            color: white;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            padding: 15px 20px;
-            /* SAFE AREA & BOX SIZING FIX */
-            padding-bottom: calc(15px + env(safe-area-inset-bottom));
-            box-sizing: border-box;
-            
-            transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            z-index: 5000; /* High Z-index */
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
+        /* TOAST NOTIFICATION */
+        .toast-notification {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.85); color: white;
+            padding: 12px 24px; border-radius: 50px;
+            font-size: 14px; font-weight: 600;
+            display: none; align-items: center; gap: 10px;
+            z-index: 9999; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        
-        .undo-bar.active { transform: translateY(0); }
-        .undo-actions { display: flex; gap: 15px; }
-        
-        .undo-btn { 
-            background: rgba(255,255,255,0.1); 
-            border: 1px solid #666; 
-            color: white; 
-            padding: 8px 16px; 
-            border-radius: 6px; 
-            font-weight: 600; 
-            cursor: pointer;
-            font-size: 14px;
+        .toast-notification.active {
+            display: flex;
+            animation: fadeUp 2.5s forwards;
         }
-        .undo-btn.green { border-color: var(--success); color: var(--success); background: rgba(39, 174, 96, 0.1); }
 
         /* ================= MOBILE OPTIMIZATIONS ================= */
         @media (max-width: 480px) {
-            .scroll-container { padding: 15px 8px; padding-bottom: 90px; }
+            .scroll-container { padding: 15px 8px; }
             .main-card { border-radius: 8px; margin-bottom: 12px; }
 
             .header-content { flex-direction: column; align-items: center; gap: 10px; text-align: center; }
@@ -403,13 +408,20 @@
     </div>
 
     <div class="top-bar">
-        <button class="menu-btn" onclick="toggleMenu()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-        </button>
+        <!-- LEFT: Menu + Undo/Redo -->
+        <div class="header-left-group">
+            <button class="menu-btn" onclick="toggleMenu()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <button class="history-btn" id="undo-btn" onclick="performUndo()">↩</button>
+            <button class="history-btn" id="redo-btn" onclick="performRedo()">↪</button>
+        </div>
+        
         <div class="header-center">
             <img src="https://github.com/RicoPRUSA/Hours-Tracker/blob/main/TU%20LOGO%20WITH%20NAME%20LARGE.PNG?raw=true" alt="Tiles Unlimited" class="app-logo">
             <div class="app-title" data-i18n="app_title">HOURS TRACKER</div>
         </div>
+        
         <button class="lang-toggle" id="lang-btn" onclick="toggleLanguage()">ES</button>
     </div>
 
@@ -432,15 +444,12 @@
         <div style="height: 20px;"></div>
     </div>
 
-    <!-- FIXED UNDO BAR -->
-    <div class="undo-bar" id="undo-bar">
-        <span><span id="deleted-count">1</span> item deleted</span>
-        <div class="undo-actions">
-            <button class="undo-btn" onclick="performUndo()">↩ Undo</button>
-            <button class="undo-btn green" onclick="performRedo()" id="redo-btn" style="display:none;">Redo ↪</button>
-        </div>
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast-notification">
+        <span>🗑 Deleted</span>
     </div>
 
+    <!-- SETTINGS MODAL -->
     <div class="modal" id="modal-settings">
         <h2 data-i18n="settings_title">Job Settings</h2>
         <div class="form-group">
@@ -528,7 +537,7 @@
         };
 
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_stable_v6');
+            const saved = localStorage.getItem('hoursTrackerState_stable_v7');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -541,22 +550,9 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_stable_v6', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_stable_v7', JSON.stringify(state));
             renderUI();
-        }
-
-        function tick() {
-            if (state.isPunchedIn && state.currentStart) {
-                const diff = new Date() - state.currentStart;
-                document.getElementById('main-timer').innerText = formatHMS(diff);
-                const liveEarnEl = document.getElementById('live-card-earn');
-                const liveDurEl = document.getElementById('live-card-dur');
-                if(liveEarnEl && liveDurEl) {
-                    const earnings = (diff / 3600000) * state.hourlyWage;
-                    liveEarnEl.innerText = formatMoney(earnings);
-                    liveDurEl.innerText = formatDuration(diff);
-                } 
-            }
+            updateHistoryButtons();
         }
 
         function toggleLanguage() {
@@ -581,20 +577,37 @@
             saveData(); 
         }
 
-        function updateUndoBar() {
-            const bar = document.getElementById('undo-bar');
-            const count = document.getElementById('deleted-count');
+        function tick() {
+            if (state.isPunchedIn && state.currentStart) {
+                const diff = new Date() - state.currentStart;
+                document.getElementById('main-timer').innerText = formatHMS(diff);
+                const liveEarnEl = document.getElementById('live-card-earn');
+                const liveDurEl = document.getElementById('live-card-dur');
+                if(liveEarnEl && liveDurEl) {
+                    const earnings = (diff / 3600000) * state.hourlyWage;
+                    liveEarnEl.innerText = formatMoney(earnings);
+                    liveDurEl.innerText = formatDuration(diff);
+                } 
+            }
+        }
+
+        // --- UNDO/REDO & TOAST ---
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('active');
+            void toast.offsetWidth; // trigger reflow
+            toast.classList.add('active');
+        }
+
+        function updateHistoryButtons() {
+            const undoBtn = document.getElementById('undo-btn');
             const redoBtn = document.getElementById('redo-btn');
             
-            if (undoStack.length > 0) {
-                bar.classList.add('active');
-                count.innerText = undoStack.length;
-            } else {
-                bar.classList.remove('active');
-            }
+            if(undoStack.length > 0) undoBtn.classList.add('active');
+            else undoBtn.classList.remove('active');
             
-            if (redoStack.length > 0) { redoBtn.style.display = "inline-block"; } 
-            else { redoBtn.style.display = "none"; }
+            if(redoStack.length > 0) redoBtn.classList.add('active');
+            else redoBtn.classList.remove('active');
         }
 
         function performUndo() {
@@ -603,7 +616,6 @@
             redoStack.push(item); 
             state.sessions.push(item); 
             saveData();
-            updateUndoBar();
         }
 
         function performRedo() {
@@ -612,7 +624,6 @@
             undoStack.push(item);
             state.sessions = state.sessions.filter(s => s.id !== item.id);
             saveData();
-            updateUndoBar();
         }
 
         function deleteSessionById(id) {
@@ -623,11 +634,12 @@
                 redoStack = []; 
                 state.sessions.splice(index, 1);
                 saveData();
-                updateUndoBar();
+                showToast();
                 if(navigator.vibrate) navigator.vibrate(20);
             }
         }
 
+        // --- SWIPE LOGIC ---
         let startX = 0;
         function attachSwipeListeners() {
             const rows = document.querySelectorAll('.day-row');
@@ -695,13 +707,12 @@
         }
 
         function deleteEntry() {
-            const id = parseInt(document.getElementById('edit-id').value);
-            if(confirm(t('confirm_delete'))) { deleteSessionById(id); closeAll(); }
+            if(confirm(t('confirm_delete'))) { deleteSessionById(parseInt(document.getElementById('edit-id').value)); closeAll(); }
         }
 
         function saveSettings() {
             const wage = parseFloat(document.getElementById('wage-input').value);
-            if(wage >= 0) { state.hourlyWage = wage; localStorage.setItem('hoursTrackerState_stable_v6', JSON.stringify(state)); document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage); renderWeeks(); }
+            if(wage >= 0) { state.hourlyWage = wage; localStorage.setItem('hoursTrackerState_stable_v7', JSON.stringify(state)); document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage); renderWeeks(); }
         }
 
         function renderUI() {
@@ -791,7 +802,7 @@
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('active'); }
         function openModal(id) { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
         function closeAll() { document.getElementById('sidebar').classList.remove('open'); document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); document.getElementById('overlay').classList.remove('active'); }
-        function clearData() { if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable_v6'); location.reload(); } }
+        function clearData() { if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable_v7'); location.reload(); } }
         function exportData() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state)); const node = document.createElement('a'); node.setAttribute("href", dataStr); node.setAttribute("download", "floor_master_backup.json"); document.body.appendChild(node); node.click(); node.remove(); }
     </script>
 </body>
