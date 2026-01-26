@@ -197,7 +197,7 @@
 
         /* --- CARDS CONTAINER --- */
         .scroll-container {
-            padding: 20px; flex: 1; overflow-y: auto;
+            padding: 20px; flex: 1; overflow-y: auto; padding-bottom: 70px; /* Space for undo bar */
         }
 
         .main-card {
@@ -209,14 +209,13 @@
 
         .card-header {
             background: var(--header-gradient); padding: 15px 20px;
-            display: flex; flex-direction: column; /* Force Stack for Progress Bar */
-            color: white;
-            position: relative;
+            display: flex; flex-direction: column; 
+            color: white; position: relative;
         }
         
         .header-content {
             display: flex; justify-content: space-between; align-items: center; width: 100%;
-            margin-bottom: 10px; /* Space for progress bar */
+            margin-bottom: 10px;
         }
 
         .header-left { display: flex; flex-direction: column; }
@@ -234,25 +233,13 @@
             text-shadow: 0 0 10px rgba(0,0,0,0.2); line-height: 1;
         }
         
-        /* PROGRESS BAR STYLES */
         .week-progress {
-            width: 100%;
-            height: 4px;
-            background: rgba(0,0,0,0.2); /* Darker track */
-            border-radius: 2px;
-            overflow: hidden;
+            width: 100%; height: 4px; background: rgba(0,0,0,0.2); border-radius: 2px; overflow: hidden;
         }
-        
         .week-progress-bar {
-            height: 100%;
-            background-color: var(--accent-neon); /* Green by default */
-            border-radius: 2px;
-            transition: width 0.5s ease-in-out;
+            height: 100%; background-color: var(--accent-neon); border-radius: 2px; transition: width 0.5s ease-in-out;
         }
-        
-        .week-progress-bar.overtime {
-            background-color: var(--accent-gold); /* Gold if > 40 */
-        }
+        .week-progress-bar.overtime { background-color: var(--accent-gold); }
         
         .header-delete-btn {
             background: rgba(255,255,255,0.1); border: none; color: #fff;
@@ -262,14 +249,34 @@
         }
         .header-delete-btn:active { background: rgba(255,59,48,0.8); }
 
-        /* LIST ITEM STYLES */
-        .day-list { list-style: none; padding: 0; margin: 0; }
+        /* LIST ITEM STYLES (SWIPE READY) */
+        .day-list { list-style: none; padding: 0; margin: 0; overflow: hidden; }
 
-        .day-row {
-            padding: 16px 20px; border-bottom: 1px solid var(--border); 
-            display: flex; justify-content: space-between; align-items: center; position: relative; 
+        .day-row-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
         }
-        .day-row:last-child { border-bottom: none; }
+
+        /* The Red Background Layer */
+        .day-row-bg {
+            position: absolute; top: 0; bottom: 0; left: 0; right: 0;
+            background: var(--danger);
+            display: flex; align-items: center; justify-content: flex-end;
+            padding-right: 25px;
+            color: white; font-weight: bold; font-size: 20px;
+            z-index: 1;
+        }
+
+        /* The Front Content Layer */
+        .day-row {
+            position: relative; z-index: 2;
+            background: var(--card-bg);
+            padding: 16px 20px; 
+            display: flex; justify-content: space-between; align-items: center;
+            transition: transform 0.2s ease-out; /* Smooth snap back */
+            touch-action: pan-y; /* Allow vertical scroll, handle horizontal in JS */
+        }
 
         .day-info { flex: 1; }
         .day-name { font-weight: 700; font-size: 15px; color: var(--text-main); margin-bottom: 4px; }
@@ -287,39 +294,43 @@
         }
         .edit-btn:active { background: #f0f9ff; }
 
+        /* UNDO FOOTER */
+        .undo-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: #333; color: white;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 2000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+        }
+        .undo-bar.active { transform: translateY(0); }
+        .undo-actions { display: flex; gap: 15px; }
+        .undo-btn { background: none; border: 1px solid #666; color: white; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .undo-btn.green { border-color: var(--success); color: var(--success); }
+
         /* ================= MOBILE OPTIMIZATIONS ================= */
         @media (max-width: 480px) {
             .scroll-container { padding: 15px 8px; }
             .main-card { border-radius: 8px; margin-bottom: 12px; }
 
-            .header-content {
-                flex-direction: column; align-items: center; gap: 10px; text-align: center;
-            }
-            
-            .header-left {
-                width: 100%; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 4px; align-items: center; 
-            }
+            .header-content { flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+            .header-left { width: 100%; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 4px; align-items: center; }
             .header-title { font-size: 16px; }
             .header-right { width: 100%; justify-content: center; position: relative; }
-            
             .stats-group { flex-direction: row-reverse; gap: 15px; align-items: baseline; justify-content: center; }
             .header-delete-btn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
             .total-pay-badge { margin-bottom: 0; font-size: 20px; }
             .total-hrs-sub { font-size: 14px; }
 
             .day-row { flex-direction: column; align-items: center; padding: 8px 10px; }
-            .day-info {
-                width: 100%; margin-bottom: 4px; display: flex; flex-direction: row; 
-                align-items: center; justify-content: center; gap: 5px; flex-wrap: wrap; 
-            }
+            .day-info { width: 100%; margin-bottom: 4px; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; flex-wrap: wrap; }
             .day-name { margin-bottom: 0; font-size: 15px; }
             .day-name::after { content: "•"; color: #ccc; margin-left: 5px; }
             .day-time-range { font-size: 13px; color: #7F8C8D; }
 
-            .day-stats {
-                width: 100%; flex-direction: row; justify-content: center; align-items: center;
-                gap: 15px; padding-left: 30px; padding-right: 30px; 
-            }
+            .day-stats { width: 100%; flex-direction: row; justify-content: center; align-items: center; gap: 15px; padding-left: 30px; padding-right: 30px; }
             .day-earn { font-size: 17px; font-weight: 800; color: var(--success); }
             .day-dur { margin-top: 0; background: transparent; padding: 0; color: var(--text-main); font-size: 14px; font-family: monospace; font-weight: 600; }
             
@@ -327,21 +338,12 @@
         }
 
         /* --- MODALS --- */
-        .modal {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95);
-            background: #FFFFFF; width: 90%; max-width: 380px; padding: 25px;
-            border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            z-index: 1001; opacity: 0; pointer-events: none; transition: opacity 0.2s;
-        }
+        .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); background: #FFFFFF; width: 90%; max-width: 380px; padding: 25px; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); z-index: 1001; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
         .modal.active { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
         .modal h2 { margin: 0 0 20px 0; font-size: 20px; font-weight: 800; color: var(--text-main); }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; color: var(--text-sec); font-size: 12px; font-weight: 700; text-transform: uppercase; }
-        .form-group input { 
-            width: 100%; padding: 14px; background: #F8F9FA;
-            border: 2px solid #E1E8ED; border-radius: 8px; font-size: 24px; box-sizing: border-box; 
-            color: var(--text-main); outline: none; font-family: inherit; text-align: center;
-        }
+        .form-group input { width: 100%; padding: 14px; background: #F8F9FA; border: 2px solid #E1E8ED; border-radius: 8px; font-size: 24px; box-sizing: border-box; color: var(--text-main); outline: none; font-family: inherit; text-align: center; }
         .form-group input:focus { border-color: var(--accent-teal); background: white; }
         .modal-buttons { display: flex; gap: 12px; margin-top: 20px; }
         .btn { flex: 1; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
@@ -401,6 +403,15 @@
 
     <div class="scroll-container" id="cards-container">
         <div style="height: 20px;"></div>
+    </div>
+
+    <!-- UNDO BAR -->
+    <div class="undo-bar" id="undo-bar">
+        <span><span id="deleted-count">1</span> item deleted</span>
+        <div class="undo-actions">
+            <button class="undo-btn" onclick="performUndo()">↩ Undo</button>
+            <button class="undo-btn green" onclick="performRedo()" id="redo-btn" style="display:none;">Redo ↪</button>
+        </div>
     </div>
 
     <div class="modal" id="modal-settings">
@@ -474,16 +485,17 @@
             }
         };
 
-        let state = {
-            sessions: [], isPunchedIn: false, currentStart: null, hourlyWage: 18.00, language: 'en'
-        };
+        let state = { sessions: [], isPunchedIn: false, currentStart: null, hourlyWage: 18.00, language: 'en' };
+        
+        // UNDO STACKS
+        let undoStack = [];
+        let redoStack = [];
 
         window.onload = function() {
             loadData(); renderUI(); setInterval(tick, 1000);
             
             const scrollContainer = document.getElementById('cards-container');
             const punchSection = document.querySelector('.punch-section');
-            
             scrollContainer.addEventListener('scroll', () => {
                 if (scrollContainer.scrollTop > 20) { punchSection.classList.add('shrunk'); } 
                 else { punchSection.classList.remove('shrunk'); }
@@ -491,7 +503,7 @@
         };
 
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_stable_v5');
+            const saved = localStorage.getItem('hoursTrackerState_stable_v6');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -504,26 +516,8 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_stable_v5', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_stable_v6', JSON.stringify(state));
             renderUI();
-        }
-
-        function tick() {
-            if (state.isPunchedIn && state.currentStart) {
-                const diff = new Date() - state.currentStart;
-                document.getElementById('main-timer').innerText = formatHMS(diff);
-                
-                // NO RENDERWEEKS() HERE - Stops bouncing
-                const liveEarnEl = document.getElementById('live-card-earn');
-                const liveDurEl = document.getElementById('live-card-dur');
-                
-                if(liveEarnEl && liveDurEl) {
-                    const earnings = (diff / 3600000) * state.hourlyWage;
-                    liveEarnEl.innerText = formatMoney(earnings);
-                    liveDurEl.innerText = formatDuration(diff);
-                } 
-                // No else logic here - card is built on punch in
-            }
         }
 
         function toggleLanguage() {
@@ -533,38 +527,129 @@
         }
 
         function t(key) { return translations[state.language][key] || key; }
-
-        function updateText() {
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                el.innerHTML = t(key);
-            });
-        }
+        function updateText() { document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n')); }); }
 
         function togglePunch() {
             if (state.isPunchedIn) {
                 const end = new Date();
-                const session = {
-                    id: Date.now(),
-                    startTime: state.currentStart,
-                    endTime: end,
-                    duration: end - state.currentStart
-                };
-                state.sessions.push(session);
-                state.isPunchedIn = false;
-                state.currentStart = null;
+                const session = { id: Date.now(), startTime: state.currentStart, endTime: end, duration: end - state.currentStart };
+                state.sessions.push(session); state.isPunchedIn = false; state.currentStart = null;
                 if(navigator.vibrate) navigator.vibrate(50);
             } else {
-                state.currentStart = new Date();
-                state.isPunchedIn = true;
+                state.currentStart = new Date(); state.isPunchedIn = true;
                 if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
             }
-            // THIS CALL IS CRITICAL - It builds the card immediately when you punch
             saveData(); 
         }
 
+        function tick() {
+            if (state.isPunchedIn && state.currentStart) {
+                const diff = new Date() - state.currentStart;
+                document.getElementById('main-timer').innerText = formatHMS(diff);
+                const liveEarnEl = document.getElementById('live-card-earn');
+                const liveDurEl = document.getElementById('live-card-dur');
+                if(liveEarnEl && liveDurEl) {
+                    const earnings = (diff / 3600000) * state.hourlyWage;
+                    liveEarnEl.innerText = formatMoney(earnings);
+                    liveDurEl.innerText = formatDuration(diff);
+                } 
+            }
+        }
+
+        // --- UNDO/REDO LOGIC ---
+        function updateUndoBar() {
+            const bar = document.getElementById('undo-bar');
+            const count = document.getElementById('deleted-count');
+            const redoBtn = document.getElementById('redo-btn');
+            
+            if (undoStack.length > 0) {
+                bar.classList.add('active');
+                count.innerText = undoStack.length;
+            } else {
+                bar.classList.remove('active');
+            }
+            
+            if (redoStack.length > 0) { redoBtn.style.display = "inline-block"; } 
+            else { redoBtn.style.display = "none"; }
+        }
+
+        function performUndo() {
+            if(undoStack.length === 0) return;
+            const item = undoStack.pop();
+            redoStack.push(item); // Add to redo
+            state.sessions.push(item); // Restore
+            saveData();
+            updateUndoBar();
+        }
+
+        function performRedo() {
+            if(redoStack.length === 0) return;
+            const item = redoStack.pop();
+            // Delete it again, but push back to undo stack
+            undoStack.push(item);
+            state.sessions = state.sessions.filter(s => s.id !== item.id);
+            saveData();
+            updateUndoBar();
+        }
+
+        // --- SWIPE DELETE LOGIC ---
+        function deleteSessionById(id) {
+            const index = state.sessions.findIndex(s => s.id === id);
+            if(index > -1) {
+                const deletedItem = state.sessions[index];
+                undoStack.push(deletedItem); // Push to undo
+                redoStack = []; // Clear redo when new action taken
+                state.sessions.splice(index, 1);
+                saveData();
+                updateUndoBar();
+                if(navigator.vibrate) navigator.vibrate(20);
+            }
+        }
+
+        // --- TOUCH HANDLERS FOR SWIPE ---
+        let startX = 0;
+        let currentSwipedRow = null;
+
+        function attachSwipeListeners() {
+            const rows = document.querySelectorAll('.day-row');
+            rows.forEach(row => {
+                row.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    row.style.transition = 'none';
+                }, {passive: true});
+
+                row.addEventListener('touchmove', (e) => {
+                    const currentX = e.touches[0].clientX;
+                    const diff = currentX - startX;
+                    if(diff < 0) { // Only allow left swipe
+                        row.style.transform = `translateX(${diff}px)`;
+                    }
+                }, {passive: true});
+
+                row.addEventListener('touchend', (e) => {
+                    const endX = e.changedTouches[0].clientX;
+                    const diff = endX - startX;
+                    row.style.transition = 'transform 0.2s ease-out';
+                    
+                    if(diff < -100) { // Threshold to delete
+                        row.style.transform = `translateX(-100%)`;
+                        const id = parseInt(row.getAttribute('data-id'));
+                        // Wait for animation then delete
+                        setTimeout(() => deleteSessionById(id), 200);
+                    } else {
+                        row.style.transform = `translateX(0)`;
+                    }
+                });
+            });
+        }
+
+        // ... [Standard functions: deleteWeek, addManualEntry, openEdit, saveEdit, deleteEntry, saveSettings, renderUI]
+        // These remain same as V5, just ensure renderWeeks calls attachSwipeListeners at end
+        
         function deleteWeek(sundayTimestamp) {
             if(confirm(t('confirm_delete_week'))) {
+                // For undoing a whole week, we'd need a more complex stack (array of items). 
+                // For now, week delete is permanent or requires simple confirm.
                 state.sessions = state.sessions.filter(s => {
                     const d = new Date(s.startTime); d.setHours(0,0,0,0); d.setDate(d.getDate() - d.getDay());
                     return d.getTime() !== sundayTimestamp;
@@ -599,12 +684,14 @@
         }
 
         function deleteEntry() {
-            if(confirm(t('confirm_delete'))) { state.sessions = state.sessions.filter(s => s.id !== parseInt(document.getElementById('edit-id').value)); saveData(); closeAll(); }
+            // Manual delete from Edit Modal
+            const id = parseInt(document.getElementById('edit-id').value);
+            if(confirm(t('confirm_delete'))) { deleteSessionById(id); closeAll(); }
         }
 
         function saveSettings() {
             const wage = parseFloat(document.getElementById('wage-input').value);
-            if(wage >= 0) { state.hourlyWage = wage; localStorage.setItem('hoursTrackerState_stable_v5', JSON.stringify(state)); document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage); renderWeeks(); }
+            if(wage >= 0) { state.hourlyWage = wage; localStorage.setItem('hoursTrackerState_stable_v6', JSON.stringify(state)); document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage); renderWeeks(); }
         }
 
         function renderUI() {
@@ -631,7 +718,6 @@
                 grouped[sunday].sessions.push(s); grouped[sunday].totalDuration += s.duration;
             });
 
-            // THIS IS THE FIX: ENSURE LIVE CARD DATA IS INCLUDED IN GROUPING
             if(state.isPunchedIn && state.currentStart) {
                 const sunday = getWeekStart(state.currentStart).getTime();
                 if(!grouped[sunday]) grouped[sunday] = { weekStart: new Date(sunday), sessions: [], totalDuration: 0 };
@@ -644,30 +730,31 @@
             sortedKeys.forEach(key => {
                 const group = grouped[key];
                 const endOfWeek = new Date(group.weekStart); endOfWeek.setDate(endOfWeek.getDate() + 6);
-                
-                // Progress Bar Logic
                 const totalHrs = group.totalDuration / 3600000;
                 const pct = Math.min((totalHrs/40)*100, 100);
                 const isOvertime = totalHrs > 40;
-
                 group.sessions.sort((a,b) => b.startTime - a.startTime);
 
                 let rowsHTML = "";
-                
-                // RENDER LIVE ROW
                 if(state.isPunchedIn && getWeekStart(state.currentStart).getTime() == key) {
                     const cd = new Date() - state.currentStart;
-                    rowsHTML += `<li class="day-row" style="background:#fffcf5; border-left: 3px solid var(--accent-orange);">
+                    rowsHTML += `<li class="day-row-wrapper"><div class="day-row" style="background:#fffcf5; border-left: 3px solid var(--accent-orange);">
                         <div class="day-info"><div class="day-name" style="color:var(--accent-orange)">${t('btn_in_progress')}</div><div class="day-time-range" style="color:var(--text-sec);">${formatTime(state.currentStart)} - ${t('btn_now')}</div></div>
                         <div class="day-stats"><div class="day-dur" id="live-card-dur">${formatDuration(cd)}</div><div class="day-earn" id="live-card-earn" style="color:var(--accent-orange)">${formatMoney((cd/3600000)*state.hourlyWage)}</div></div>
-                    </li>`;
+                    </div></li>`;
                 }
 
                 group.sessions.forEach(s => {
                     const dateName = s.startTime.toLocaleDateString(state.language === 'es' ? 'es-ES' : 'en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-                    rowsHTML += `<li class="day-row"><div class="day-info"><div class="day-name">${dateName}</div><div class="day-time-range">${formatTime(s.startTime)} - ${formatTime(s.endTime)}</div></div>
-                    <div class="day-stats"><div class="day-dur">${formatDuration(s.duration)}</div><div class="day-earn">${formatMoney(calcEarn(s.duration))}</div></div>
-                    <button class="edit-btn" onclick="openEdit(${s.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button></li>`;
+                    // WRAPPED ROW FOR SWIPE
+                    rowsHTML += `<li class="day-row-wrapper">
+                        <div class="day-row-bg">🗑</div>
+                        <div class="day-row" data-id="${s.id}">
+                            <div class="day-info"><div class="day-name">${dateName}</div><div class="day-time-range">${formatTime(s.startTime)} - ${formatTime(s.endTime)}</div></div>
+                            <div class="day-stats"><div class="day-dur">${formatDuration(s.duration)}</div><div class="day-earn">${formatMoney(calcEarn(s.duration))}</div></div>
+                            <button class="edit-btn" onclick="openEdit(${s.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                        </div>
+                    </li>`;
                 });
 
                 container.innerHTML += `<div class="main-card"><div class="card-header">
@@ -679,6 +766,9 @@
                     <div class="week-progress"><div class="week-progress-bar ${isOvertime?'overtime':''}" style="width: ${pct}%"></div></div>
                 </div><ul class="day-list">${rowsHTML}</ul></div>`;
             });
+            
+            // Attach swipe listeners to new elements
+            attachSwipeListeners();
         }
 
         // Utils
@@ -693,7 +783,7 @@
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('active'); }
         function openModal(id) { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
         function closeAll() { document.getElementById('sidebar').classList.remove('open'); document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); document.getElementById('overlay').classList.remove('active'); }
-        function clearData() { if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable_v5'); location.reload(); } }
+        function clearData() { if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable_v6'); location.reload(); } }
         function exportData() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state)); const node = document.createElement('a'); node.setAttribute("href", dataStr); node.setAttribute("download", "floor_master_backup.json"); document.body.appendChild(node); node.click(); node.remove(); }
     </script>
 </body>
