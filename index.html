@@ -39,13 +39,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        @keyframes fadeUp {
-            0% { opacity: 0; transform: translate(-50%, 20px); }
-            20% { opacity: 1; transform: translate(-50%, 0); }
-            80% { opacity: 1; transform: translate(-50%, 0); }
-            100% { opacity: 0; transform: translate(-50%, -20px); }
-        }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
@@ -142,10 +135,10 @@
         }
         .overlay.active { display: block; }
 
-        /* --- PUNCH SECTION (COMPACT STYLE) --- */
+        /* --- PUNCH SECTION (INLINE STYLE) --- */
         .punch-section {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 15px 20px 20px 20px; 
+            padding: 15px 20px 25px 20px; 
             background: var(--control-bg);
             box-shadow: 0 15px 30px -10px rgba(0, 118, 150, 0.15); 
             border-bottom: 1px solid rgba(0,0,0,0.05);
@@ -155,16 +148,16 @@
         }
 
         .punch-section.shrunk {
-            padding: 5px 20px; flex-direction: row; justify-content: space-between; gap: 15px;
+            padding: 5px 20px; 
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* Controls Row */
+        /* Top Row: Undo/Redo + Rate */
         .controls-row {
             display: flex; justify-content: space-between; align-items: center;
-            width: 100%; max-width: 320px; margin-bottom: 5px; 
+            width: 100%; max-width: 350px; margin-bottom: 10px; 
             transition: all 0.2s ease;
         }
         .punch-section.shrunk .controls-row { display: none; }
@@ -188,36 +181,53 @@
         .rate-label { display: block; font-size: 9px; color: var(--text-sec); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .rate-value { display: block; font-size: 13px; font-weight: 800; color: var(--text-main); }
 
-        /* ULTRA THIN TIMER - SAME SIZE AS BUTTON */
-        .live-timer {
-            font-size: 24px; /* MATCHES BUTTON FONT SIZE */
-            font-weight: 300; /* Light */
-            font-variant-numeric: tabular-nums;
-            margin-bottom: 8px; margin-top: 0;
-            line-height: 1; color: var(--accent-teal);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            letter-spacing: 1px; transition: all 0.3s ease;
-        }
-        .punch-section.shrunk .live-timer {
-            font-size: 20px; margin-bottom: 0; color: var(--text-main); font-weight: 400;
+        /* Main Action Row: Timer + Button Inline */
+        .punch-action-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px; /* Space between timer and button */
+            width: 100%;
+            max-width: 400px;
+            transition: all 0.3s ease;
         }
 
-        /* PILL SHAPED BUTTON - LIGHTER FONT */
+        /* TIMER - LEFT SIDE */
+        .live-timer {
+            font-size: 32px; 
+            font-weight: 300; 
+            font-variant-numeric: tabular-nums;
+            color: var(--accent-teal);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            letter-spacing: 1px;
+            width: 140px; /* Fixed width prevents jitter */
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .punch-section.shrunk .live-timer {
+            font-size: 20px; color: var(--text-main); font-weight: 400; width: auto;
+        }
+
+        /* BUTTON - RIGHT SIDE */
         .punch-btn {
-            width: 100%; max-width: 280px; height: 55px; 
+            width: auto;
+            min-width: 160px; /* Minimum width for text */
+            height: 50px; 
             border-radius: 50px; border: none; color: white; cursor: pointer;
             box-shadow: 0 8px 20px -5px rgba(0, 118, 150, 0.4); 
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: flex; flex-direction: row; align-items: center; justify-content: center;
-            gap: 12px; position: relative; overflow: hidden;
+            gap: 8px; position: relative; overflow: hidden;
+            padding: 0 20px;
         }
         
         .punch-section.shrunk .punch-btn {
-            height: 40px; max-width: 140px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: 36px; min-width: 100px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 0 15px;
         }
         .punch-section.shrunk .btn-icon,
         .punch-section.shrunk .btn-sub-text { display: none; }
-        .punch-section.shrunk .btn-main-text { font-size: 14px; font-weight: 400; }
+        .punch-section.shrunk .btn-main-text { font-size: 14px; font-weight: 500; }
 
         .punch-btn:active { transform: scale(0.96); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         .btn-in { background: var(--btn-in-gradient); }
@@ -225,26 +235,20 @@
 
         .btn-label-group { display: flex; flex-direction: column; align-items: flex-start; }
         
-        /* UPDATED BUTTON FONTS: MATCHING TIMER STYLE */
         .btn-main-text { 
-            font-size: 24px; /* MATCHES TIMER FONT SIZE */
-            font-weight: 300; /* Light Weight */
-            letter-spacing: 1px; 
+            font-size: 18px; 
+            font-weight: 600; 
+            letter-spacing: 0.5px; 
             text-transform: uppercase; 
         }
         .btn-sub-text { 
-            font-size: 10px; 
+            font-size: 9px; 
             opacity: 0.9; 
-            font-weight: 200; /* Ultra Light */
+            font-weight: 300; 
             text-transform: uppercase; 
             letter-spacing: 1px; 
         }
-        .btn-icon { font-size: 22px; font-weight: 300; }
-
-        @media (max-width: 400px) {
-            .live-timer { font-size: 24px; margin-bottom: 8px; }
-            .punch-section { padding: 10px 15px 15px 15px; }
-        }
+        .btn-icon { font-size: 20px; }
 
         /* --- CARDS CONTAINER --- */
         .scroll-container {
@@ -446,15 +450,18 @@
             </div>
         </div>
 
-        <div class="live-timer" id="main-timer">00:00:00</div>
-        
-        <button id="punch-btn" class="punch-btn btn-in" onclick="togglePunch()">
-            <div class="btn-icon" id="btn-icon">▶</div>
-            <div class="btn-label-group">
-                <span class="btn-main-text" id="btn-text" data-i18n="btn_in_main">PUNCH IN</span>
-                <span class="btn-sub-text" id="btn-sub" data-i18n="btn_in_sub">Start Shift</span>
-            </div>
-        </button>
+        <!-- NEW INLINE LAYOUT -->
+        <div class="punch-action-row">
+            <div class="live-timer" id="main-timer">00:00:00</div>
+            
+            <button id="punch-btn" class="punch-btn btn-in" onclick="togglePunch()">
+                <div class="btn-icon" id="btn-icon">▶</div>
+                <div class="btn-label-group">
+                    <span class="btn-main-text" id="btn-text" data-i18n="btn_in_main">PUNCH IN</span>
+                    <span class="btn-sub-text" id="btn-sub" data-i18n="btn_in_sub">Start Shift</span>
+                </div>
+            </button>
+        </div>
     </div>
 
     <div class="scroll-container" id="cards-container">
@@ -552,7 +559,7 @@
         };
 
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_stable_v13');
+            const saved = localStorage.getItem('hoursTrackerState_stable_v14');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -565,23 +572,9 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_stable_v13', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_stable_v14', JSON.stringify(state));
             renderUI();
             updateHistoryButtons();
-        }
-
-        function tick() {
-            if (state.isPunchedIn && state.currentStart) {
-                const diff = new Date() - state.currentStart;
-                document.getElementById('main-timer').innerText = formatHMS(diff);
-                const liveEarnEl = document.getElementById('live-card-earn');
-                const liveDurEl = document.getElementById('live-card-dur');
-                if(liveEarnEl && liveDurEl) {
-                    const earnings = (diff / 3600000) * state.hourlyWage;
-                    liveEarnEl.innerText = formatMoney(earnings);
-                    liveDurEl.innerText = formatDuration(diff);
-                } 
-            }
         }
 
         function toggleLanguage() {
@@ -604,6 +597,20 @@
                 if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
             }
             saveData(); 
+        }
+
+        function tick() {
+            if (state.isPunchedIn && state.currentStart) {
+                const diff = new Date() - state.currentStart;
+                document.getElementById('main-timer').innerText = formatHMS(diff);
+                const liveEarnEl = document.getElementById('live-card-earn');
+                const liveDurEl = document.getElementById('live-card-dur');
+                if(liveEarnEl && liveDurEl) {
+                    const earnings = (diff / 3600000) * state.hourlyWage;
+                    liveEarnEl.innerText = formatMoney(earnings);
+                    liveDurEl.innerText = formatDuration(diff);
+                } 
+            }
         }
 
         // --- UNDO/REDO & TOAST ---
@@ -727,7 +734,7 @@
 
         function saveSettings() {
             const wage = parseFloat(document.getElementById('wage-input').value);
-            if(wage >= 0) { state.hourlyWage = wage; localStorage.setItem('hoursTrackerState_stable_v13', JSON.stringify(state)); document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage); renderWeeks(); }
+            if(wage >= 0) { state.hourlyWage = wage; localStorage.setItem('hoursTrackerState_stable_v14', JSON.stringify(state)); document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage); renderWeeks(); }
         }
 
         function renderUI() {
@@ -817,7 +824,7 @@
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('active'); }
         function openModal(id) { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
         function closeAll() { document.getElementById('sidebar').classList.remove('open'); document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); document.getElementById('overlay').classList.remove('active'); }
-        function clearData() { if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable_v13'); location.reload(); } }
+        function clearData() { if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable_v14'); location.reload(); } }
         function exportData() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state)); const node = document.createElement('a'); node.setAttribute("href", dataStr); node.setAttribute("download", "floor_master_backup.json"); document.body.appendChild(node); node.click(); node.remove(); }
     </script>
 </body>
