@@ -135,29 +135,31 @@
         }
         .overlay.active { display: block; }
 
-        /* --- PUNCH SECTION (INLINE STYLE) --- */
+        /* --- PUNCH SECTION (COMPACT STYLE) --- */
         .punch-section {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 15px 20px 25px 20px; 
+            padding: 10px 10px 20px 10px; /* Reduced side padding to prevent overflow */
             background: var(--control-bg);
             box-shadow: 0 15px 30px -10px rgba(0, 118, 150, 0.15); 
             border-bottom: 1px solid rgba(0,0,0,0.05);
             border-bottom-left-radius: 30px;
             border-bottom-right-radius: 30px;
             position: relative; z-index: 10; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .punch-section.shrunk {
-            padding: 5px 20px; 
+            padding: 5px 15px; 
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* Top Row: Undo/Redo + Rate */
+        /* Controls Row */
         .controls-row {
             display: flex; justify-content: space-between; align-items: center;
-            width: 100%; max-width: 350px; margin-bottom: 10px; 
+            width: 100%; max-width: 320px; margin-bottom: 5px; 
             transition: all 0.2s ease;
         }
         .punch-section.shrunk .controls-row { display: none; }
@@ -186,69 +188,78 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px; /* Space between timer and button */
+            gap: 15px; /* Default gap */
             width: 100%;
             max-width: 400px;
             transition: all 0.3s ease;
+            flex-wrap: nowrap; /* Prevent wrapping */
         }
 
         /* TIMER - LEFT SIDE */
         .live-timer {
-            font-size: 32px; 
+            font-size: 24px; 
             font-weight: 300; 
             font-variant-numeric: tabular-nums;
-            color: var(--accent-teal);
+            margin-bottom: 0; margin-top: 0;
+            line-height: 1; color: var(--accent-teal);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             letter-spacing: 1px;
-            width: 140px; /* Fixed width prevents jitter */
-            text-align: center;
+            text-align: right;
+            white-space: nowrap; /* Keep on one line */
             transition: all 0.3s ease;
+            flex-shrink: 0; /* Don't shrink timer below content */
         }
         
         .punch-section.shrunk .live-timer {
-            font-size: 20px; color: var(--text-main); font-weight: 400; width: auto;
+            font-size: 20px; color: var(--text-main); font-weight: 400;
         }
 
         /* BUTTON - RIGHT SIDE */
         .punch-btn {
             width: auto;
-            min-width: 160px; /* Minimum width for text */
-            height: 50px; 
+            min-width: 140px; /* Reduced min width for mobile */
+            height: 55px; 
             border-radius: 50px; border: none; color: white; cursor: pointer;
             box-shadow: 0 8px 20px -5px rgba(0, 118, 150, 0.4); 
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: flex; flex-direction: row; align-items: center; justify-content: center;
             gap: 8px; position: relative; overflow: hidden;
-            padding: 0 20px;
+            padding: 0 15px; /* Reduced padding */
+            flex-shrink: 1; /* Allow button to shrink if needed */
         }
         
         .punch-section.shrunk .punch-btn {
-            height: 36px; min-width: 100px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 0 15px;
+            height: 36px; min-width: 80px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 0 12px;
         }
         .punch-section.shrunk .btn-icon,
         .punch-section.shrunk .btn-sub-text { display: none; }
-        .punch-section.shrunk .btn-main-text { font-size: 14px; font-weight: 500; }
+        .punch-section.shrunk .btn-main-text { font-size: 14px; font-weight: 400; }
 
         .punch-btn:active { transform: scale(0.96); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         .btn-in { background: var(--btn-in-gradient); }
         .btn-out { background: var(--btn-out-gradient); box-shadow: 0 8px 20px -5px rgba(211, 47, 47, 0.4); }
 
-        .btn-label-group { display: flex; flex-direction: column; align-items: flex-start; }
+        .btn-label-group { display: flex; flex-direction: column; align-items: flex-start; overflow: hidden; }
         
         .btn-main-text { 
-            font-size: 18px; 
-            font-weight: 600; 
-            letter-spacing: 0.5px; 
-            text-transform: uppercase; 
+            font-size: 24px; 
+            font-weight: 300; 
+            letter-spacing: 1px; 
+            text-transform: uppercase;
+            white-space: nowrap;
         }
         .btn-sub-text { 
-            font-size: 9px; 
-            opacity: 0.9; 
-            font-weight: 300; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
+            font-size: 10px; opacity: 0.9; font-weight: 200; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;
         }
-        .btn-icon { font-size: 20px; }
+        .btn-icon { font-size: 22px; font-weight: 300; flex-shrink: 0; }
+
+        @media (max-width: 400px) {
+            .punch-section { padding: 10px 10px 20px 10px; }
+            .punch-action-row { gap: 10px; }
+            .live-timer { font-size: 22px; }
+            .btn-main-text { font-size: 18px; }
+            .punch-btn { min-width: 120px; height: 50px; }
+        }
 
         /* --- CARDS CONTAINER --- */
         .scroll-container {
@@ -262,34 +273,36 @@
             animation: slideIn 0.3s ease-out; 
         }
 
+        /* --- CARD HEADER (COMPACT) --- */
         .card-header {
-            background: var(--header-gradient); padding: 15px 20px;
+            background: var(--header-gradient); 
+            padding: 10px 15px; /* Compact padding */
             display: flex; flex-direction: column; 
             color: white; position: relative;
         }
         
         .header-content {
             display: flex; justify-content: space-between; align-items: center; width: 100%;
-            margin-bottom: 12px;
+            margin-bottom: 6px; /* Compact spacing */
         }
 
         .header-left { display: flex; flex-direction: column; }
-        .header-label { font-size: 11px; color: rgba(255, 255, 255, 0.8); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-        .header-title { font-size: 15px; font-weight: 700; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .header-label { font-size: 10px; color: rgba(255, 255, 255, 0.8); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+        .header-title { font-size: 14px; font-weight: 700; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
 
         .header-right { text-align: right; display: flex; align-items: center; gap: 15px; }
         .stats-group { display: flex; flex-direction: column; align-items: flex-end; }
 
-        .total-hrs-sub { font-size: 13px; color: rgba(255,255,255,0.9); font-weight: 500; margin-bottom: 2px; }
+        .total-hrs-sub { font-size: 12px; color: rgba(255,255,255,0.9); font-weight: 500; margin-bottom: 1px; }
         .total-hrs-sub.overtime { color: var(--accent-gold); font-weight: 800; }
 
         .total-pay-badge {
-            color: var(--accent-neon); font-size: 19px; font-weight: 700;
+            color: var(--accent-neon); font-size: 17px; font-weight: 700;
             text-shadow: 0 0 10px rgba(0,0,0,0.2); line-height: 1;
         }
         
         .week-progress {
-            width: 100%; height: 4px; background: rgba(0,0,0,0.2); border-radius: 2px; overflow: hidden;
+            width: 100%; height: 3px; background: rgba(0,0,0,0.2); border-radius: 2px; overflow: hidden;
         }
         .week-progress-bar {
             height: 100%; background-color: var(--accent-neon); border-radius: 2px; transition: width 0.5s ease-in-out;
@@ -366,14 +379,14 @@
             .scroll-container { padding: 15px 8px; }
             .main-card { border-radius: 8px; margin-bottom: 12px; }
 
-            .header-content { flex-direction: column; align-items: center; gap: 10px; text-align: center; }
-            .header-left { width: 100%; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 4px; align-items: center; }
-            .header-title { font-size: 16px; }
+            .header-content { flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+            .header-left { width: 100%; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 6px; margin-bottom: 2px; align-items: center; }
+            .header-title { font-size: 15px; }
             .header-right { width: 100%; justify-content: center; position: relative; }
-            .stats-group { flex-direction: row-reverse; gap: 15px; align-items: baseline; justify-content: center; }
+            .stats-group { flex-direction: row-reverse; gap: 12px; align-items: baseline; justify-content: center; }
             .header-delete-btn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
-            .total-pay-badge { margin-bottom: 0; font-size: 20px; }
-            .total-hrs-sub { font-size: 14px; }
+            .total-pay-badge { margin-bottom: 0; font-size: 18px; }
+            .total-hrs-sub { font-size: 13px; }
 
             .day-row { flex-direction: column; align-items: center; padding: 10px 12px; }
             .day-info { width: 100%; margin-bottom: 4px; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; flex-wrap: wrap; }
@@ -450,7 +463,7 @@
             </div>
         </div>
 
-        <!-- NEW INLINE LAYOUT -->
+        <!-- INLINE ACTION ROW -->
         <div class="punch-action-row">
             <div class="live-timer" id="main-timer">00:00:00</div>
             
@@ -559,7 +572,7 @@
         };
 
         function loadData() {
-            const saved = localStorage.getItem('hoursTrackerState_stable_v14');
+            const saved = localStorage.getItem('hoursTrackerState_stable_v15');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = parsed;
@@ -572,9 +585,23 @@
 
         function saveData() {
             state.sessions.sort((a, b) => b.startTime - a.startTime);
-            localStorage.setItem('hoursTrackerState_stable_v14', JSON.stringify(state));
+            localStorage.setItem('hoursTrackerState_stable_v15', JSON.stringify(state));
             renderUI();
             updateHistoryButtons();
+        }
+
+        function tick() {
+            if (state.isPunchedIn && state.currentStart) {
+                const diff = new Date() - state.currentStart;
+                document.getElementById('main-timer').innerText = formatHMS(diff);
+                const liveEarnEl = document.getElementById('live-card-earn');
+                const liveDurEl = document.getElementById('live-card-dur');
+                if(liveEarnEl && liveDurEl) {
+                    const earnings = (diff / 3600000) * state.hourlyWage;
+                    liveEarnEl.innerText = formatMoney(earnings);
+                    liveDurEl.innerText = formatDuration(diff);
+                } 
+            }
         }
 
         function toggleLanguage() {
@@ -597,20 +624,6 @@
                 if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
             }
             saveData(); 
-        }
-
-        function tick() {
-            if (state.isPunchedIn && state.currentStart) {
-                const diff = new Date() - state.currentStart;
-                document.getElementById('main-timer').innerText = formatHMS(diff);
-                const liveEarnEl = document.getElementById('live-card-earn');
-                const liveDurEl = document.getElementById('live-card-dur');
-                if(liveEarnEl && liveDurEl) {
-                    const earnings = (diff / 3600000) * state.hourlyWage;
-                    liveEarnEl.innerText = formatMoney(earnings);
-                    liveDurEl.innerText = formatDuration(diff);
-                } 
-            }
         }
 
         // --- UNDO/REDO & TOAST ---
@@ -734,7 +747,7 @@
 
         function saveSettings() {
             const wage = parseFloat(document.getElementById('wage-input').value);
-            if(wage >= 0) { state.hourlyWage = wage; localStorage.setItem('hoursTrackerState_stable_v14', JSON.stringify(state)); document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage); renderWeeks(); }
+            if(wage >= 0) { state.hourlyWage = wage; localStorage.setItem('hoursTrackerState_stable_v15', JSON.stringify(state)); document.getElementById('display-rate').innerText = formatMoney(state.hourlyWage); renderWeeks(); }
         }
 
         function renderUI() {
@@ -824,7 +837,7 @@
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('active'); }
         function openModal(id) { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
         function closeAll() { document.getElementById('sidebar').classList.remove('open'); document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); document.getElementById('overlay').classList.remove('active'); }
-        function clearData() { if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable_v14'); location.reload(); } }
+        function clearData() { if(confirm(t('confirm_reset'))) { localStorage.removeItem('hoursTrackerState_stable_v15'); location.reload(); } }
         function exportData() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state)); const node = document.createElement('a'); node.setAttribute("href", dataStr); node.setAttribute("download", "floor_master_backup.json"); document.body.appendChild(node); node.click(); node.remove(); }
     </script>
 </body>
